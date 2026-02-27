@@ -1,6 +1,6 @@
 from django.db import models    
 import uuid
-from django.contrib.postgres.fields import JSONField
+
 
 class Studentreg(models.Model):
     photo=models.FileField(upload_to='uploads/')
@@ -15,7 +15,7 @@ class Studentreg(models.Model):
     login_id=models.OneToOneField('Login', on_delete=models.CASCADE,related_name = 'student_as_loginid')
 
 class Login(models.Model):
-    email=models.EmailField()
+    username=models.CharField(max_length=150)
     password=models.CharField(max_length=50)
     usertype=models.IntegerField(default=0,null=True)
     status=models.IntegerField(default=0)
@@ -73,8 +73,20 @@ class Omr(models.Model):
     current_date=models.DateTimeField(auto_now_add=True)
     login_id=models.ForeignKey('Login', on_delete=models.CASCADE)
     tc_id=models.ForeignKey('teacherreg', on_delete=models.CASCADE)
+class AssignmentQuestion(models.Model):
+    teacher = models.ForeignKey('teacherreg', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    question_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
 class Assignment(models.Model):
     assignment=models.FileField(upload_to='uploads/')
+    question = models.ForeignKey(AssignmentQuestion, on_delete=models.CASCADE, null=True)
+    transcription = models.TextField(null=True, blank=True)
+    rating = models.CharField(max_length=100, null=True, blank=True)
     current_date=models.DateTimeField(auto_now_add=True)
     login_id=models.ForeignKey('Studentreg', on_delete=models.CASCADE)
     ta_id=models.ForeignKey('teacherreg', on_delete=models.CASCADE)

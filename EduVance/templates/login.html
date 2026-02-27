@@ -1,17 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Login</title>
-    </head>
+
+<head>
+    <title>Login</title>
+</head>
+
 <body>
-    <style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
         }
+
         body {
             display: flex;
             justify-content: center;
@@ -20,6 +25,7 @@
             background: #1f293a;
             /* background-image: url(./bg.jpg); */
         }
+
         .container {
             position: relative;
             z-index: 1000;
@@ -31,6 +37,7 @@
             backdrop-filter: blur(5px);
             border-radius: 20px;
         }
+
         .container span {
             position: absolute;
             left: 0;
@@ -43,14 +50,17 @@
             animation: animateBlink 3s linear infinite;
             animation-delay: calc(var(--i) * (3s / 50));
         }
+
         @keyframes animateBlink {
             0% {
                 background: #0ef;
             }
+
             25% {
                 background: #2c4766;
             }
         }
+
         .login-box {
             position: absolute;
             top: 42%;
@@ -58,20 +68,24 @@
             transform: translate(-50%, -50%);
             width: 400px;
         }
+
         .login-box form {
             width: 100%;
             padding: 0 50px;
         }
+
         h3 {
             font-size: 2em;
             color: #fff;
             text-align: center;
         }
+
         .input-box {
             color: #FFFFFF;
             position: relative;
             margin: 25px 0;
         }
+
         .input-box input {
             width: 100%;
             height: 50px;
@@ -84,10 +98,12 @@
             padding: 0 20px;
             transition: .5s ease;
         }
+
         .input-box input:focus,
         .input-box input:valid {
             border-color: #0ef;
         }
+
         .input-box label {
             position: absolute;
             top: 50%;
@@ -98,6 +114,7 @@
             pointer-events: none;
             transition: .5s ease;
         }
+
         .input-box input:focus~label,
         .input-box input:valid~label {
             top: 1px;
@@ -106,18 +123,22 @@
             padding: 0 6px;
             color: #0ef;
         }
+
         .forgot-pass {
             margin: -15px 0 10px;
             text-align: center;
         }
+
         .forgot-pass a {
             font-size: .85em;
             color: #fff;
             text-decoration: none;
         }
+
         .forgot-pass a:hover {
             text-decoration: underline;
         }
+
         .btn {
             width: 100%;
             height: 45px;
@@ -130,21 +151,25 @@
             color: #1f293a;
             font-weight: 600;
         }
+
         .signup-link {
             margin: 20px 0 10px;
             text-align: center;
         }
+
         .signup-link a {
             font-size: 1em;
             color: #0ef;
             text-decoration: none;
             font-weight: 600;
         }
+
         .signup-link a:hover {
             text-decoration: underline;
-        }</style>
-        <style>
-            * {
+        }
+    </style>
+    <style>
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -198,12 +223,12 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px #00ffb74d  ;
+            box-shadow: 0 4px 20px #00ffb74d;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px #00ffb771  ;
+            box-shadow: 0 6px 25px #00ffb771;
         }
 
         .gradient-background {
@@ -264,6 +289,7 @@
             0% {
                 transform: translate(0, 0) scale(1);
             }
+
             100% {
                 transform: translate(10%, 10%) scale(1.1);
             }
@@ -273,6 +299,7 @@
             0% {
                 transform: translate(0, 0) scale(1);
             }
+
             100% {
                 transform: translate(-10%, -5%) scale(1.15);
             }
@@ -283,6 +310,7 @@
                 transform: translate(0, 0) scale(1);
                 opacity: 0.3;
             }
+
             100% {
                 transform: translate(-5%, 10%) scale(1.05);
                 opacity: 0.6;
@@ -296,7 +324,7 @@
             width: 100%;
             height: 100%;
             background-size: 40px 40px;
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             z-index: 2;
@@ -320,6 +348,7 @@
                 opacity: 0.3;
                 transform: translate(-50%, -50%) scale(0.9);
             }
+
             100% {
                 opacity: 0.7;
                 transform: translate(-50%, -50%) scale(1.1);
@@ -343,7 +372,7 @@
             opacity: 0;
             pointer-events: none;
         }
-        </style>
+    </style>
     <div class="gradient-background">
         <div class="gradient-sphere sphere-1"></div>
         <div class="gradient-sphere sphere-2"></div>
@@ -356,11 +385,20 @@
     <div class="container">
         <div class="login-box">
             <h3>Login</h3>
+            {% if messages %}
+            <ul class="messages" style="list-style: none; padding: 0; text-align: center; margin-bottom: 20px;">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}
+                    style="color: #ff4d4d; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 5px;">{{ message
+                    }}</li>
+                    {% endfor %}
+            </ul>
+            {% endif %}
             <form method="POST">
                 {% csrf_token %}
                 <div class="input-box">
-                    <h4>Email</h4>
-                    {{ login.email }}
+                    <h4>Username</h4>
+                    {{ login.username }}
                 </div>
                 <div class="input-box">
                     <h4>Password</h4>
@@ -370,9 +408,9 @@
                     <a href="#">Forgot your password?</a>
                 </div> -->
                 <div class="form_group">
-                <button type="submit" class="btn" value="login">Login</button>
-            </div>
-                </form>
+                    <button type="submit" class="btn" value="login">Login</button>
+                </div>
+            </form>
             </form>
         </div>
     </div>
@@ -382,112 +420,112 @@
         // Create particle effect
         const particlesContainer = document.getElementById('particles-container');
         const particleCount = 80;
-        
+
         // Create particles
         for (let i = 0; i < particleCount; i++) {
             createParticle();
         }
-        
+
         function createParticle() {
             const particle = document.createElement('div');
             particle.className = 'particle';
-            
+
             // Random size (small)
             const size = Math.random() * 3 + 1;
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
-            
+
             // Initial position
             resetParticle(particle);
-            
+
             particlesContainer.appendChild(particle);
-            
+
             // Animate
             animateParticle(particle);
         }
-        
+
         function resetParticle(particle) {
             // Random position
             const posX = Math.random() * 100;
             const posY = Math.random() * 100;
-            
+
             particle.style.left = `${posX}%`;
             particle.style.top = `${posY}%`;
             particle.style.opacity = '0';
-            
+
             return {
                 x: posX,
                 y: posY
             };
         }
-        
+
         function animateParticle(particle) {
             // Initial position
             const pos = resetParticle(particle);
-            
+
             // Random animation properties
             const duration = Math.random() * 10 + 10;
             const delay = Math.random() * 5;
-            
+
             // Animate with GSAP-like timing
             setTimeout(() => {
                 particle.style.transition = `all ${duration}s linear`;
                 particle.style.opacity = Math.random() * 0.3 + 0.1;
-                
+
                 // Move in a slight direction
                 const moveX = pos.x + (Math.random() * 20 - 10);
                 const moveY = pos.y - Math.random() * 30; // Move upwards
-                
+
                 particle.style.left = `${moveX}%`;
                 particle.style.top = `${moveY}%`;
-                
+
                 // Reset after animation completes
                 setTimeout(() => {
                     animateParticle(particle);
                 }, duration * 1000);
             }, delay * 1000);
         }
-        
+
         // Mouse interaction
         document.addEventListener('mousemove', (e) => {
             // Create particles at mouse position
             const mouseX = (e.clientX / window.innerWidth) * 100;
             const mouseY = (e.clientY / window.innerHeight) * 100;
-            
+
             // Create temporary particle
             const particle = document.createElement('div');
             particle.className = 'particle';
-            
+
             // Small size
             const size = Math.random() * 4 + 2;
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
-            
+
             // Position at mouse
             particle.style.left = `${mouseX}%`;
             particle.style.top = `${mouseY}%`;
             particle.style.opacity = '0.6';
-            
+
             particlesContainer.appendChild(particle);
-            
+
             // Animate outward
             setTimeout(() => {
                 particle.style.transition = 'all 2s ease-out';
                 particle.style.left = `${mouseX + (Math.random() * 10 - 5)}%`;
                 particle.style.top = `${mouseY + (Math.random() * 10 - 5)}%`;
                 particle.style.opacity = '0';
-                
+
                 // Remove after animation
                 setTimeout(() => {
                     particle.remove();
                 }, 2000);
             }, 10);
-            
+
             // Subtle movement of gradient spheres
             const spheres = document.querySelectorAll('.gradient-sphere');
             const moveX = (e.clientX / window.innerWidth - 0.5) * 5;
             const moveY = (e.clientY / window.innerHeight - 0.5) * 5;
-            
+
             spheres.forEach(sphere => {
                 const currentTransform = getComputedStyle(sphere).transform;
                 sphere.style.transform = `translate(${moveX}px, ${moveY}px)`;
@@ -495,4 +533,5 @@
         });
     </script>
 </body>
+
 </html>

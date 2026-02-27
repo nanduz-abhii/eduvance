@@ -85,9 +85,8 @@ urlpatterns=[
     path('save_essay_marks/<int:essay_id>/', views.save_essay_marks, name='save_essay_marks'),
     # urls.py
     path('upload_assignment_mark/<int:id>/upload-mark/', views.upload_assignment_mark, name='upload_assignment_mark'),
-    
-
-
+    path('add_assignment', views.add_assignment_view, name='add_assignment'),
+    path('student_assignments', views.student_assignments_view, name='student_assignments'),
   
  ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
 

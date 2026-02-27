@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--favicon-->
+    <link rel="icon" href="./admin_assets/images/favicon-32x32.png" type="image/png" />
+    <!--plugins-->
+    <link href="./admin_assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+    <link href="./admin_assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+    <link href="./admin_assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+    <link href="./admin_assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <!-- loader-->
+    <link href="./admin_assets/css/pace.min.css" rel="stylesheet" />
+    <script src="./admin_assets/js/pace.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="./admin_assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./admin_assets/css/bootstrap-extended.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+    <link href="./admin_assets/css/app.css" rel="stylesheet">
+    <link href="./admin_assets/css/icons.css" rel="stylesheet">
+
+    <title>EduVance - Admin Dashboard</title>
+</head>
+
+<body class="bg-theme bg-theme2">
+    <!--wrapper-->
+    <div class="wrapper">
+        <!--sidebar wrapper -->
+        <div class="sidebar-wrapper" data-simplebar="true">
+            <div class="sidebar-header">
+                <div>
+                    <img src="./admin_assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
+                </div>
+                <div>
+                    <h4 class="logotwo">EduVance</h4>
+                </div>
+                <div class="toggle-icon ms-auto"><i class='bx bx-arrow-back'></i>
+                </div>
+            </div>
+            <!--navigation-->
+            <ul class="metismenu" id="menu">
+                <li>
+                    <a href="#">
+                        <div class="parent-icon"><i class='bx bx-book'></i>
+                        </div>
+                        <div class="menu-title">Add Subjects</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="parent-icon"><i class='bx bx-book'></i>
+                        </div>
+                        <div class="menu-title">Department Subjects</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="parent-icon"><i class='bx bx-book-open'></i>
+                        </div>
+                        <div class="menu-title">View Subjects</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="parent-icon"><i class="bx bx-envelope"></i>
+                        </div>
+                        <div class="menu-title">Complaints</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="parent-icon"><i class="bx bx-bell"></i>
+                        </div>
+                        <div class="menu-title">Notify Exam</div>
+                    </a>
+                </li>
+
+                <li class="menu-label">Tables</li>
+                <li>
+                    <a class="has-arrow" href="javascript:;">
+                        <div class="parent-icon"><i class="bx bx-grid-alt"></i>
+                        </div>
+                        <div class="menu-title"> Data Tables</div>
+                    </a>
+                    <ul>
+                        <li> <a href="#"><i class='bx bx-radio-circle'></i>Students</a>
+                        </li>
+                        <li> <a href="#"><i class='bx bx-radio-circle'></i>Teachers</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!--end navigation-->
+        </div>
+        <!--end sidebar wrapper -->
+        <!--start header -->
+        <header>
+            <div class="topbar d-flex align-items-center">
+                <nav class="navbar navbar-expand gap-3">
+                    <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
+                    </div>
+                </nav>
+                <div class="top-menu ms-auto">
+                    <ul class="navbar-nav align-items-center gap-1">
+                        <!-- Simplified top menu -->
+                    </ul>
+                </div>
+                <div class="user-box dropdown px-3">
+                    <a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret" href="#"
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="./admin_assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
+                        <div class="user-info">
+                            <p class="user-name mb-0">Admin</p>
+                            <p class="designattion mb-0"></p>
+                        </div>
+                        <br>
+                        <div class="ms-auto">
+                            <div class="btn-group">
+                                <a href="landing.html" class="btn btn-secondary">Log out</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </header>
+        <!--end header -->
+        <!--start page wrapper -->
+        <div class="page-wrapper">
+            <div class="page-content">
+                <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+                    <div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0">Teacher Registration</p>
+                                        <h4 class="my-1">10 Teachers Registered</h4>
+                                    </div>
+                                    <div class="widgets-icons ms-auto"><i class='bx bxs-wallet'></i>
+                                    </div>
+                                </div>
+                                <div id="chart1"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0">Student Registration</p>
+                                        <h4 class="my-1">50 Students Registered</h4>
+                                    </div>
+                                    <div class="widgets-icons ms-auto"><i class='bx bxs-group'></i>
+                                    </div>
+                                </div>
+                                <div id="chart2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end row-->
+            </div>
+        </div>
+        <!--end page wrapper -->
+        <!--start overlay-->
+        <div class="overlay toggle-icon"></div>
+        <!--end overlay-->
+        <!--Start Back To Top Button--> <a href="javaScript:;" class="back-to-top"><i
+                class='bx bxs-up-arrow-alt'></i></a>
+        <!--End Back To Top Button-->
+        <footer class="page-footer">
+            <p class="mb-0">Copyright © 2025. All right reserved.</p>
+        </footer>
+    </div>
+    <!--end wrapper-->
+
+    <!-- Bootstrap JS -->
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+    <!--plugins-->
+    <script src="./assets/js/jquery.min.js"></script>
+    <script src="./assets/plugins/simplebar/js/simplebar.min.js"></script>
+    <script src="./assets/plugins/metismenu/js/metisMenu.min.js"></script>
+    <script src="./assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    <script src="./assets/plugins/chartjs/js/Chart.min.js"></script>
+    <script src="./assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="./assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="./assets/plugins/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
+    <script src="./assets/plugins/sparkline-charts/jquery.sparkline.min.js"></script>
+    <script src="./assets/plugins/jquery-knob/excanvas.js"></script>
+    <script src="./assets/plugins/jquery-knob/jquery.knob.js"></script>
+    <script>
+        $(function () {
+            $(".knob").knob();
+        });
+    </script>
+
+    <script src="./assets/js/app.js"></script>
+</body>
+
+</html>

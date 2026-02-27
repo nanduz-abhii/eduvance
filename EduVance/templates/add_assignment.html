@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Assignment - EduVance</title>
+    <link rel="stylesheet" href="{% static 'mainpage/assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/responsive.css' %}">
+</head>
+
+<body>
+    <header id="navigation">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-30 left-col align-self-center">
+                    <div class="site-logo">
+                        <a href="{% url 'tuser' %}">EduVance</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="main-banner" style="background-color: #0d6efd; padding: 100px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 text-center text-white">
+                    <h2>Add New Assignment</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="register-section section-padding" style="padding: 60px 0;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="register-form"
+                        style="background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label for="title" class="form-label">Assignment Title</label>
+                                <input type="text" name="title" class="form-control" id="title" required
+                                    placeholder="e.g., Midterm Essay on History">
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="question" class="form-label">Assignment Question/Details</label>
+                                <textarea name="question" class="form-control" id="question" rows="6" required
+                                    placeholder="Enter the detailed question or instructions here..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-3"
+                                style="border-radius: 5px; font-weight: 600;">Create Assignment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-section section-padding" style="padding: 40px 0; background: #f8f9fa; margin-top: 60px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 text-center">
+                    <p>Created by Nandana</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

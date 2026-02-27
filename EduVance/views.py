@@ -16,19 +16,29 @@ from django.core.files.storage import default_storage
 import os
 import tempfile
 import fitz 
+from PIL import Image
+from google import genai
+
+NVIDIA_API_KEY = "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"
+# Configure Gemini API Key (Ideally this should be in .env, but hardcoding for now as per instructions/assumptions)
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyANUm5NhkC12yWPW3fR5Kf5NO4vC26ZVCw") # User provided key
+client = genai.Client(api_key=GEMINI_API_KEY)
 NVIDIA_API_KEY = "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"
 CHOICES = ['A', 'B', 'C', 'D']
 def main(request):
-    return render(request, 'main.html')
+    teachers = teacherreg.objects.filter(login_id__status='1')
+    return render(request, 'main.html', {'teachers': teachers})
 def admin(request):
     user_count = Studentreg.objects.all().count()
     t_count = teacherreg.objects.all().count()
     return render(request, 'admin.html',{'user_count': user_count,'t_count':t_count})
 def user(request):
-    results =exam.objects.all()
-    return render(request, 'user.html',{'data':results})
+    results = exam.objects.all()
+    teachers = teacherreg.objects.filter(login_id__status='1')
+    return render(request, 'user.html', {'data': results, 'teachers': teachers})
 def tuser(request):
-    return render(request, 'tuser.html')
+    teachers = teacherreg.objects.filter(login_id__status='1')
+    return render(request, 'tuser.html', {'teachers': teachers})
 def studentreg(request):
     if request.method == 'POST':
         form=studentform(request.POST,request.FILES)
@@ -101,38 +111,56 @@ def teacherregister(request):
         logins=loginform()
     return render(request,'teacherreg.html',{'form':form,'login':logins})
 def login(request):
+    print("DEBUG: Login view called")
     if request.method == 'POST':
+        print("DEBUG: POST request received")
         form = login_check(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
+            print("DEBUG: Form is valid")
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password'].strip()  # Clean whitespace
+            print(f"DEBUG: Attempting login for username: {username}")
             try:
-                user = Login.objects.get(email=email)
-                if user.password == password:
+                user = Login.objects.get(username=username)
+                print(f"DEBUG: User found: {user.username}, usertype: {user.usertype}, status: {user.status}")
+                if user.password.strip() == password:  # Compare stripped values
+                    print("DEBUG: Password matched")
                     # Only check status for students and teachers
                     if user.usertype in [1, 2]:
                         if user.status == 2:
+                            print("DEBUG: Account rejected")
                             messages.error(request, 'Your account has been rejected.')
                             return redirect('login')
                         elif user.status == 0:
+                            print("DEBUG: Account under review")
                             messages.error(request, 'Your account is under review. Please wait for admin approval.')
                             return redirect('login')
 
                     # User is allowed to log in
                     if user.usertype == 1:
+                        print("DEBUG: Redirecting to user")
                         request.session['stud_id'] = user.id
                         return redirect('user')
                     elif user.usertype == 2:
+                        print("DEBUG: Redirecting to tuser")
                         request.session['t_id'] = user.id
                         return redirect('tuser')
                     elif user.usertype == 3:
+                        print("DEBUG: Redirecting to admin")
                         request.session['a_id'] = user.id
                         return redirect('admin')
+                    else:
+                        print(f"DEBUG: Unknown usertype: {user.usertype}")
                 else:
+                    print(f"DEBUG: Password mismatch. Input: {password}, Stored: {user.password}")
                     messages.error(request, 'Invalid password')
             except Login.DoesNotExist:
+                print("DEBUG: User does not exist")
                 messages.error(request, 'User does not exist')
+        else:
+            print(f"DEBUG: Form errors: {form.errors}")
     else:
+        print("DEBUG: GET request")
         form = login_check()
     return render(request, 'login.html', {'login': form})
 
@@ -318,26 +346,75 @@ def removeomrt(request,id):
 
 def uploadassignment(request,id):
     stud_id=request.session.get('stud_id')   
-    login_details=get_object_or_404(Studentreg,login_id=stud_id)
-    tc_id=get_object_or_404(teacherreg,id=id)
+    student_obj=get_object_or_404(Studentreg,login_id=stud_id)
+    question_obj = get_object_or_404(AssignmentQuestion, id=id)
+    tc_id = question_obj.teacher
+    
     if request.method=='POST':
         form=assignment(request.POST,request.FILES)
         if form.is_valid():
             a=form.save(commit=False)
-            a.login_id=login_details
+            a.login_id=student_obj
             a.ta_id=tc_id
+            a.question = question_obj
+            
+            # Extract and Rate
+            transcription = extract_handwriting_with_gemini(request.FILES['assignment'])
+            a.transcription = transcription
+            a.rating = rate_assignment_with_ai(transcription, question_obj.question_text)
+            
             a.save()
+            messages.success(request, f"Assignment '{question_obj.title}' uploaded and rated successfully!")
             return redirect('user')
     else:
         form=assignment()
-    return render(request, 'uploadassignment.html',{'form':form})
+    return render(request, 'uploadassignment.html',{'form':form, 'question': question_obj})
+
+def add_assignment_view(request):
+    tea_id = request.session.get('t_id')
+    teacher = get_object_or_404(teacherreg, login_id=tea_id)
+    if request.method == 'POST':
+        form = AssignmentQuestionForm(request.POST)
+        if form.is_valid():
+            a = form.save(commit=False)
+            a.teacher = teacher
+            a.save()
+            messages.success(request, "Assignment added successfully.")
+            return redirect('tuser')
+    else:
+        form = AssignmentQuestionForm()
+    return render(request, 'add_assignment.html', {'form': form})
+
+def student_assignments_view(request):
+    assignments = AssignmentQuestion.objects.all()
+    return render(request, 'student_assignments.html', {'assignments': assignments})
+
+def rate_assignment_with_ai(transcription, question_text):
+    prompt = f"""
+    Evaluate the following student's handwritten transcription against the assignment question.
+    Provide a rating (Excellent, Good, Average, or Poor) and a short one-sentence feedback.
+    
+    Assignment Question: {question_text}
+    Student Submission: {transcription}
+    
+    Format: [Rating] : [Feedback]
+    """
+    try:
+        response = client.models.generate_content(
+            model='gemini-flash-latest',
+            contents=[prompt]
+        )
+        return response.text
+    except Exception as e:
+        print(f"Rating error: {e}")
+        return "Rating unavailable"
 
 def viewassignment(request):
     stud_id=request.session.get('stud_id')
-    login_details=get_object_or_404(Studentreg,login_id=stud_id)
-    view_id=Assignment.objects.filter(login_id=login_details)
+    student_obj=get_object_or_404(Studentreg,login_id=stud_id)
+    submissions = Assignment.objects.filter(login_id=student_obj).select_related('question')
 
-    return render(request,'viewassignment.html',{'data':view_id})
+    return render(request,'viewassignment.html',{'submissions':submissions})
 
 def removeassignment(request):
     stud_id=request.session.get('stud_id')
@@ -347,17 +424,18 @@ def removeassignment(request):
 
 def viewassignmentt(request):
     tea_id = request.session.get('t_id')
-    login_details = get_object_or_404(teacherreg, login_id=tea_id)
-    view_id = Assignment.objects.filter(ta_id=login_details).select_related('login_id') 
-    results = view_id 
+    teacher_obj = get_object_or_404(teacherreg, login_id=tea_id)
+    submissions = Assignment.objects.filter(ta_id=teacher_obj).select_related('login_id', 'question') 
+    
     query = request.GET.get('q', '') 
     if query:
-        results = view_id.filter(
+        submissions = submissions.filter(
            Q(login_id__admno__icontains=query) |
            Q(login_id__name__icontains=query) |
-           Q(login_id__department__icontains=query)
+           Q(login_id__department__icontains=query) |
+           Q(question__title__icontains=query)
         )
-    return render(request, 'viewassignmentt.html', {'view_assignment': results, 'query':query})
+    return render(request, 'viewassignmentt.html', {'submissions': submissions, 'query':query})
 
 def upload_assignment_mark(request, id):
     assignments = get_object_or_404(Assignment, id=id)
@@ -1052,6 +1130,48 @@ def extract_text_from_pdf(pdf_file):
     text = "\n".join(page.get_text("text") for page in doc)
     return text
 
+def extract_handwriting_with_gemini(media_file):
+    """Extracts handwritten text from an image or PDF using Google Gemini Vision."""
+    try:
+        # Read the file content
+        file_content = media_file.read()
+        media_file.seek(0) # Reset pointer
+        
+        file_extension = os.path.splitext(media_file.name)[1].lower()
+        prompt = "Transcribe the handwritten text in this document exactly as it is written. Do not add any extra commentary or formatting."
+        
+        if file_extension in ['.jpg', '.jpeg', '.png']:
+            # Handle standard images
+            image = Image.open(media_file)
+            response = client.models.generate_content(
+                model='gemini-flash-latest',
+                contents=[prompt, image]
+            )
+            return response.text
+            
+        elif file_extension == '.pdf':
+            # Handle PDF by uploading it using the File API
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf:
+                temp_pdf.write(file_content)
+                temp_pdf_path = temp_pdf.name
+                
+            try:
+                uploaded_file = client.files.upload(path=temp_pdf_path)
+                response = client.models.generate_content(
+                    model='gemini-flash-latest',
+                    contents=[prompt, uploaded_file]
+                )
+                return response.text
+            finally:
+                os.remove(temp_pdf_path)
+                
+        else:
+            return "Unsupported file format for handwriting recognition."
+            
+    except Exception as e:
+        print(f"Error extracting handwriting with Gemini: {e}")
+        return f"Error during handwriting extraction: {str(e)}"
+
 import requests
 
 SERPAPI_KEY = "7c8d23c1d5c1cdbab8a8517a0bde42da6cefda61c0af21bdeebf362d403cfa29"  # Replace with your SerpAPI key
@@ -1115,7 +1235,18 @@ def essaycheck(request, id):
         form = Essayup(request.POST, request.FILES)
         if form.is_valid():
             pdf_file = request.FILES['essay']
-            extracted_text = extract_text_from_pdf(pdf_file)
+            
+            # Use Gemini for extraction (handles both Image and PDF)
+            extracted_text = extract_handwriting_with_gemini(pdf_file)
+            
+            # Fallback to standard PDF extraction if Gemini fails or returns empty
+            if not extracted_text or "Error" in extracted_text or "Unsupported" in extracted_text:
+                pdf_file.seek(0) # Reset pointer before reading again
+                try:
+                    extracted_text = extract_text_from_pdf(pdf_file)
+                except Exception as e:
+                    print(f"Fallback PDF extraction failed: {e}")
+                    extracted_text = extracted_text if extracted_text else "Could not extract text."
 
             # Check plagiarism and get percentage
             plagiarism_results, plagiarism_percentage = check_plagiarism(extracted_text)

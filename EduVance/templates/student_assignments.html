@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Available Assignments - EduVance</title>
+    <link rel="stylesheet" href="{% static 'mainpage/assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/style.css' %}">
+</head>
+
+<body>
+    <header id="navigation">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-30 left-col align-self-center">
+                    <div class="site-logo">
+                        <a href="{% url 'user' %}">EduVance</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="main-banner" style="background-color: #0d6efd; padding: 100px 0;">
+        <div class="container">
+            <div class="row text-center text-white">
+                <h2>Your Assignments</h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="assignments-list section-padding" style="padding: 60px 0;">
+        <div class="container">
+            <div class="row">
+                {% for assignment in assignments %}
+                <div class="col-lg-4 mb-4">
+                    <div class="assignment-card"
+                        style="background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; display: flex; flex-direction: column;">
+                        <h4 style="color: #0d6efd; font-weight: 700; margin-bottom: 15px;">{{ assignment.title }}</h4>
+                        <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1;">{{
+                            assignment.question|truncatechars:150 }}</p>
+                        <div class="text-muted small mb-3">Posted by: {{ assignment.teacher.username }}</div>
+                        <a href="{% url 'uploadassignment' assignment.id %}"
+                            class="btn btn-outline-primary w-100">Upload Answer</a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center">
+                    <p>No assignments available at the moment.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-section"
+        style="padding: 40px 0; background: #f8f9fa; border-top: 1px solid #eee; text-align: center;">
+        <p>Created by Nandana</p>
+    </footer>
+</body>
+
+</html>

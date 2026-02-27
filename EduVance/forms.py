@@ -10,14 +10,11 @@ class studentform(forms.ModelForm):
     gender = forms.ChoiceField(choices=gender_choices, widget=forms.RadioSelect())
 
     dept_choices = (
-        ('bca', 'BCA'),
-        ('bcom', 'B.Com.Computer Application'),
-        ('bba', 'BBA'),
-        ('b.a.english', 'B.A. English'),
-        ('b.sc.psychology', 'B.Sc.Psychology'),
-        ('b.com.taxation', 'B.Com.Taxation'),
-
-
+        ('ece', 'Electronics and Communication Engineering'),
+        ('me', 'Mechanical Engineering'),
+        ('ce', 'Civil Engineering'),
+        ('cse', 'Computer Science Engineering'),
+        ('aids', 'Artificial Intelligence and Data Science'),
     )
     department = forms.ChoiceField(choices=dept_choices, widget=forms.Select(attrs={'class': 'form-control'}))
     sem_choices = (
@@ -51,19 +48,20 @@ class studentform(forms.ModelForm):
 class loginform(forms.ModelForm):
     class Meta:
         model=Login
-        fields=['email','password']
+        fields=['username','password']
         widgets={
-            'email':forms.EmailInput(attrs={'class':'form-control'}),
+            'username':forms.TextInput(attrs={'class':'form-control'}),
             'password':forms.PasswordInput(attrs={'class':'form-control'}),
         }
 
 class login_check(forms.Form):
-        email=forms.EmailField()
-        password=forms.CharField(max_length=10)
-        widgets={
-            'email':forms.EmailInput(attrs={'class':'form-control'}),
-            'password':forms.PasswordInput(attrs={'class':'form-control'}),
-        }
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
+    )
+    password = forms.CharField(
+        max_length=50,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
+    )
 class teacherform(forms.ModelForm):
     gender_choices = (
         ('male', 'Male'),
@@ -73,12 +71,11 @@ class teacherform(forms.ModelForm):
     tgender = forms.ChoiceField(choices=gender_choices, widget=forms.RadioSelect())
 
     tdept_choices = (
-        ('bca', 'BCA'),
-        ('bcom', 'B.Com.Computer Application'),
-        ('bba', 'BBA'),
-        ('b.a.english', 'B.A. English'),
-        ('b.sc.psychology', 'B.Sc.Psychology'),
-        ('b.com.taxation', 'B.Com.Taxation'),
+        ('ece', 'Electronics and Communication Engineering'),
+        ('me', 'Mechanical Engineering'),
+        ('ce', 'Civil Engineering'),
+        ('cse', 'Computer Science Engineering'),
+        ('aids', 'Artificial Intelligence and Data Science'),
     )
     tdepartment = forms.ChoiceField(choices=tdept_choices, widget=forms.Select(attrs={'class': 'form-control'}))    
 
@@ -141,11 +138,19 @@ class attendance(forms.Form):
     def __init__(self, *args, **kwargs):
         super(attendance, self).__init__(*args, **kwargs)
         
-        # Get the latest distinct departments and semesters from the database
-        departments = Studentreg.objects.values_list('department', 'department').distinct()
-        semesters = Studentreg.objects.values_list('semester', 'semester').distinct()
+        # Engineering Department Choices
+        departments = [
+            ('cse', 'Computer Science Engineering'),
+            ('aids', 'Artificial Intelligence and Data Science'),
+            ('me', 'Mechanical Engineering'),
+            ('ce', 'Civil Engineering'),
+            ('ece', 'Electronics and Communication Engineering'),
+        ]
+        
+        # Engineering Semester Choices (1-8)
+        semesters = [(str(i), f"Semester {i}") for i in range(1, 9)]
 
-        # Dynamically set the choices
+        # Set the choices
         self.fields['department'].choices = departments
         self.fields['semester'].choices = semesters
 
@@ -186,11 +191,19 @@ class uploadmark(forms.Form):
     def __init__(self, *args, **kwargs):
         super(uploadmark, self).__init__(*args, **kwargs)
         
-        # Get the latest distinct departments and semesters from the database
-        departments = Studentreg.objects.values_list('department', 'department').distinct()
-        semesters = Studentreg.objects.values_list('semester', 'semester').distinct()
+        # Engineering Department Choices
+        departments = [
+            ('cse', 'Computer Science Engineering'),
+            ('aids', 'Artificial Intelligence and Data Science'),
+            ('me', 'Mechanical Engineering'),
+            ('ce', 'Civil Engineering'),
+            ('ece', 'Electronics and Communication Engineering'),
+        ]
+        
+        # Engineering Semester Choices (1-8)
+        semesters = [(str(i), f"Semester {i}") for i in range(1, 9)]
 
-        # Dynamically set the choices
+        # Set the choices
         self.fields['department'].choices = departments
         self.fields['semester'].choices = semesters
 
@@ -206,12 +219,11 @@ class internal(forms.ModelForm):
 class SubjectForm(forms.ModelForm):
     dept_choices = (
         ('choose department', 'Choose department'),
-        ('bca', 'BCA'),
-        ('bcom', 'B.Com.Computer Application'),
-        ('bba', 'BBA'),
-        ('b.a.english', 'B.A. English'),
-        ('b.sc.psychology', 'B.Sc.Psychology'),
-        ('b.com.taxation', 'B.Com.Taxation'),
+        ('ece', 'Electronics and Communication Engineering'),
+        ('me', 'Mechanical Engineering'),
+        ('ce', 'Civil Engineering'),
+        ('cse', 'Computer Science Engineering'),
+        ('aids', 'Artificial Intelligence and Data Science'),
     )
     dept = forms.ChoiceField(choices=dept_choices, widget=forms.Select(attrs={'class': 'form-control'}))
     sem_choices = (
@@ -502,3 +514,12 @@ class SubjectaddForm(forms.ModelForm):
         }
 class QuestionPaperUploadForm(forms.Form):
     question_paper = forms.FileField(label="Upload Question Paper (PDF)")
+
+class AssignmentQuestionForm(forms.ModelForm):
+    class Meta:
+        model = AssignmentQuestion
+        fields = ['title', 'question_text']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'question_text': forms.Textarea(attrs={'class': 'form-control'}),
+        }

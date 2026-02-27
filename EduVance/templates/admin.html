@@ -23,7 +23,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
 	<link href="{% static 'admin/assets/css/app.css' %}" rel="stylesheet">
 	<link href="{% static 'admin/assets/css/icons.css' %}" rel="stylesheet">
-	
+
 	<title>EduVance</title>
 </head>
 
@@ -41,7 +41,7 @@
 				</div>
 				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-back'></i>
 				</div>
-			 </div>
+			</div>
 			<!--navigation-->
 			<ul class="metismenu" id="menu">
 				{% comment %} <li>
@@ -82,23 +82,23 @@
 				</li>
 				<li class="menu-label">UI Elements</li> {% endcomment %}
 				<li>
-					
-						<a href="{% url 'adminsubjects' %}">
+
+					<a href="{% url 'adminsubjects' %}">
 						<div class="parent-icon"><i class='bx bx-book'></i>
 						</div>
 						<div class="menu-title">Add Subjects</div>
 					</a>
-					
+
 				</li>
 				<li>
-					
+
 					<a href="{% url 'admindepartment' %}">
-					<div class="parent-icon"><i class='bx bx-book'></i>
-					</div>
-					<div class="menu-title">Department Subjects</div>
-				</a>
-				
-			</li>
+						<div class="parent-icon"><i class='bx bx-book'></i>
+						</div>
+						<div class="menu-title">Department Subjects</div>
+					</a>
+
+				</li>
 				<li>
 					<a href="{% url 'subjectview' %}">
 						<div class="parent-icon"><i class='bx bx-book-open'></i>
@@ -110,22 +110,22 @@
 					<a href="{% url 'admincompliaintview' %}">
 						<div class="parent-icon"><i class="bx bx-envelope"></i>
 						</div>
-						<div class="menu-title" >Complaints</div>
+						<div class="menu-title">Complaints</div>
 					</a>
 				</li>
 				<li>
 					<a href="{% url 'adminexam' %}">
 						<div class="parent-icon"><i class="bx bx-bell"></i>
 						</div>
-						<div class="menu-title" >Notify Exam</div>
+						<div class="menu-title">Notify Exam</div>
 					</a>
 				</li>
 
-				
+
 				<li class="menu-label">Tables</li>
 				<li>
-					
-				
+
+
 					<a class="has-arrow" href="javascript:;">
 						<div class="parent-icon"><i class="bx bx-grid-alt"></i>
 						</div>
@@ -135,6 +135,8 @@
 						<li> <a href="{% url 'searchstudad' %}"><i class='bx bx-radio-circle'></i>Students</a>
 						</li>
 						<li> <a href="{% url 'adminteachview' %}"><i class='bx bx-radio-circle'></i>Teachers</a>
+						</li>
+						<li> <a href="{% url 'teacherreg' %}"><i class='bx bx-radio-circle'></i>Teacher Registration</a>
 						</li>
 					</ul>
 				</li>
@@ -148,26 +150,39 @@
 					<ul>
 						<li><a class="has-arrow" href="javascript:;"><i class='bx bx-radio-circle'></i>Basic</a>
 							<ul>
-								<li><a href="auth-basic-signin.html" target="_blank"><i class='bx bx-radio-circle'></i>Sign In</a></li>
-								<li><a href="auth-basic-signup.html" target="_blank"><i class='bx bx-radio-circle'></i>Sign Up</a></li>
-								<li><a href="auth-basic-forgot-password.html" target="_blank"><i class='bx bx-radio-circle'></i>Forgot Password</a></li>
-								<li><a href="auth-basic-reset-password.html" target="_blank"><i class='bx bx-radio-circle'></i>Reset Password</a></li>
+								<li><a href="auth-basic-signin.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Sign In</a></li>
+								<li><a href="auth-basic-signup.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Sign Up</a></li>
+								<li><a href="auth-basic-forgot-password.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Forgot Password</a></li>
+								<li><a href="auth-basic-reset-password.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Reset Password</a></li>
 							</ul>
 						</li>
 						<li><a class="has-arrow" href="javascript:;"><i class='bx bx-radio-circle'></i>Cover</a>
 							<ul>
-								<li><a href="auth-cover-signin.html" target="_blank"><i class='bx bx-radio-circle'></i>Sign In</a></li>
-								<li><a href="auth-cover-signup.html" target="_blank"><i class='bx bx-radio-circle'></i>Sign Up</a></li>
-								<li><a href="auth-cover-forgot-password.html" target="_blank"><i class='bx bx-radio-circle'></i>Forgot Password</a></li>
-								<li><a href="auth-cover-reset-password.html" target="_blank"><i class='bx bx-radio-circle'></i>Reset Password</a></li>
+								<li><a href="auth-cover-signin.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Sign In</a></li>
+								<li><a href="auth-cover-signup.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Sign Up</a></li>
+								<li><a href="auth-cover-forgot-password.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Forgot Password</a></li>
+								<li><a href="auth-cover-reset-password.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Reset Password</a></li>
 							</ul>
 						</li>
-						<li><a class="has-arrow" href="javascript:;"><i class='bx bx-radio-circle'></i>With Header Footer</a>
+						<li><a class="has-arrow" href="javascript:;"><i class='bx bx-radio-circle'></i>With Header
+								Footer</a>
 							<ul>
-								<li><a href="auth-header-footer-signin.html" target="_blank"><i class='bx bx-radio-circle'></i>Sign In</a></li>
-								<li><a href="auth-header-footer-signup.html" target="_blank"><i class='bx bx-radio-circle'></i>Sign Up</a></li>
-								<li><a href="auth-header-footer-forgot-password.html" target="_blank"><i class='bx bx-radio-circle'></i>Forgot Password</a></li>
-								<li><a href="auth-header-footer-reset-password.html" target="_blank"><i class='bx bx-radio-circle'></i>Reset Password</a></li>
+								<li><a href="auth-header-footer-signin.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Sign In</a></li>
+								<li><a href="auth-header-footer-signup.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Sign Up</a></li>
+								<li><a href="auth-header-footer-forgot-password.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Forgot Password</a></li>
+								<li><a href="auth-header-footer-reset-password.html" target="_blank"><i
+											class='bx bx-radio-circle'></i>Reset Password</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -193,16 +208,21 @@
 						<div class="menu-title">Errors</div>
 					</a>
 					<ul>
-						<li> <a href="errors-404-error.html" target="_blank"><i class='bx bx-radio-circle'></i>404 Error</a>
+						<li> <a href="errors-404-error.html" target="_blank"><i class='bx bx-radio-circle'></i>404
+								Error</a>
 						</li>
-						<li> <a href="errors-500-error.html" target="_blank"><i class='bx bx-radio-circle'></i>500 Error</a>
+						<li> <a href="errors-500-error.html" target="_blank"><i class='bx bx-radio-circle'></i>500
+								Error</a>
 						</li>
-						<li> <a href="errors-coming-soon.html" target="_blank"><i class='bx bx-radio-circle'></i>Coming Soon</a>
+						<li> <a href="errors-coming-soon.html" target="_blank"><i class='bx bx-radio-circle'></i>Coming
+								Soon</a>
 						</li>
-						<li> <a href="error-blank-page.html" target="_blank"><i class='bx bx-radio-circle'></i>Blank Page</a>
+						<li> <a href="error-blank-page.html" target="_blank"><i class='bx bx-radio-circle'></i>Blank
+								Page</a>
 						</li>
 					</ul> {% endcomment %}
-				{% comment %} </li>
+					{% comment %}
+				</li>
 				<li>
 					<a href="faq.html">
 						<div class="parent-icon"><i class="bx bx-help-circle"></i>
@@ -256,7 +276,8 @@
 					<ul>
 						<li> <a class="has-arrow" href="javascript:;"><i class='bx bx-radio-circle'></i>Level One</a>
 							<ul>
-								<li> <a class="has-arrow" href="javascript:;"><i class='bx bx-radio-circle'></i>Level Two</a>
+								<li> <a class="has-arrow" href="javascript:;"><i class='bx bx-radio-circle'></i>Level
+										Two</a>
 									<ul>
 										<li> <a href="javascript:;"><i class='bx bx-radio-circle'></i>Level Three</a>
 										</li>
@@ -280,281 +301,324 @@
 						<div class="menu-title">Support</div>
 					</a>
 				</li> {% endcomment %}
-			{% comment %} </ul> {% endcomment %}
+				{% comment %}
+			</ul> {% endcomment %}
 			<!--end navigation-->
 		</div>
 		<!--end sidebar wrapper -->
 		<!--start header -->
 		<header>
-		<div class="topbar d-flex align-items-center">
+			<div class="topbar d-flex align-items-center">
 				<nav class="navbar navbar-expand gap-3">
-						 <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
+					<div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
 					</div>
 					{% comment %}<div class="search-bar flex-grow-1">
 						<div class="position-relative search-bar-box">
-							<input type="text" class="form-control search-control" placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
-							<span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
+							<input type="text" class="form-control search-control" placeholder="Type to search...">
+							<span class="position-absolute top-50 search-show translate-middle-y"><i
+									class='bx bx-search'></i></span>
+							<span class="position-absolute top-50 search-close translate-middle-y"><i
+									class='bx bx-x'></i></span>
 						</div>
 					</div>
 					<div class="top-menu ms-auto">
 						<ul class="navbar-nav align-items-center gap-1">
-							<li class="nav-item mobile-search-icon d-flex d-lg-none" data-bs-toggle="modal" data-bs-target="#SearchModal">
+							<li class="nav-item mobile-search-icon d-flex d-lg-none" data-bs-toggle="modal"
+								data-bs-target="#SearchModal">
 								<a class="nav-link" href="avascript:;"><i class='bx bx-search'></i>
 								</a>
 							</li>
 							<li class="nav-item dropdown dropdown-laungauge d-none d-sm-flex">
-								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="avascript:;" data-bs-toggle="dropdown"><img src="{% static 'admin/assets/images/county/02.png' %}" width="22" alt="">
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="avascript:;"
+									data-bs-toggle="dropdown"><img
+										src="{% static 'admin/assets/images/county/02.png' %}" width="22" alt="">
 								</a>
 								<ul class="dropdown-menu dropdown-menu-end">
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/01.png' %}" width="20" alt=""><span class="ms-2">English</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/01.png' %}" width="20"
+												alt=""><span class="ms-2">English</span></a>
 									</li>
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/02.png' %}" width="20" alt=""><span class="ms-2">Catalan</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/02.png' %}" width="20"
+												alt=""><span class="ms-2">Catalan</span></a>
 									</li>
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/03.png' %}" width="20" alt=""><span class="ms-2">French</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/03.png' %}" width="20"
+												alt=""><span class="ms-2">French</span></a>
 									</li>
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/04.png' %}" width="20" alt=""><span class="ms-2">Belize</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/04.png' %}" width="20"
+												alt=""><span class="ms-2">Belize</span></a>
 									</li>
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/05.png' %}" width="20" alt=""><span class="ms-2">Colombia</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/05.png' %}" width="20"
+												alt=""><span class="ms-2">Colombia</span></a>
 									</li>
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/06.png' %}" width="20" alt=""><span class="ms-2">Spanish</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/06.png' %}" width="20"
+												alt=""><span class="ms-2">Spanish</span></a>
 									</li>
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/07.png' %}" width="20" alt=""><span class="ms-2">Georgian</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/07.png' %}" width="20"
+												alt=""><span class="ms-2">Georgian</span></a>
 									</li>
-									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img src="{% static 'admin/assets/images/county/08.png' %}" width="20" alt=""><span class="ms-2">Hindi</span></a>
+									<li><a class="dropdown-item d-flex align-items-center py-2" href="javascript:;"><img
+												src="{% static 'admin/assets/images/county/08.png' %}" width="20"
+												alt=""><span class="ms-2">Hindi</span></a>
 									</li>
 								</ul>
 							</li>
 
 							<li class="nav-item dropdown dropdown-app">
-								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown" href="javascript:;"><i class='bx bx-grid-alt'></i></a>
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown"
+									href="javascript:;"><i class='bx bx-grid-alt'></i></a>
 								<div class="dropdown-menu dropdown-menu-end p-0">
 									<div class="app-container p-2 my-2">
-									  <div class="row gx-0 gy-2 row-cols-3 justify-content-center p-2">
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/slack.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Slack</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/behance.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Behance</p>
-											  </div>
-											  </div>
-										  </a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												<img src="{% static 'admin/assets/images/app/google-drive.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Dribble</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/outlook.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Outlook</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/github.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">GitHub</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/stack-overflow.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Stack</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/figma.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Stack</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/twitter.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Twitter</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/google-calendar.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Calendar</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/spotify.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Spotify</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/google-photos.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Photos</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/pinterest.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Photos</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/linkedin.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">linkedin</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/dribble.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Dribble</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/youtube.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">YouTube</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/google.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">News</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/envato.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Envato</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-										 <div class="col">
-										  <a href="javascript:;">
-											<div class="app-box text-center">
-											  <div class="app-icon">
-												  <img src="{% static 'admin/assets/images/app/safari.png' %}" width="30" alt="">
-											  </div>
-											  <div class="app-name">
-												  <p class="mb-0 mt-1">Safari</p>
-											  </div>
-											  </div>
-											</a>
-										 </div>
-				
-									  </div><!--end row-->
-				
+										<div class="row gx-0 gy-2 row-cols-3 justify-content-center p-2">
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/slack.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Slack</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/behance.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Behance</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/google-drive.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Dribble</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/outlook.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Outlook</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/github.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">GitHub</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/stack-overflow.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Stack</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/figma.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Stack</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/twitter.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Twitter</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/google-calendar.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Calendar</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/spotify.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Spotify</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/google-photos.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Photos</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/pinterest.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Photos</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/linkedin.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">linkedin</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/dribble.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Dribble</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/youtube.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">YouTube</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/google.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">News</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/envato.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Envato</p>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="col">
+												<a href="javascript:;">
+													<div class="app-box text-center">
+														<div class="app-icon">
+															<img src="{% static 'admin/assets/images/app/safari.png' %}"
+																width="30" alt="">
+														</div>
+														<div class="app-name">
+															<p class="mb-0 mt-1">Safari</p>
+														</div>
+													</div>
+												</a>
+											</div>
+
+										</div><!--end row-->
+
 									</div>
 								</div>
 							</li>
 
 							<li class="nav-item dropdown dropdown-large">
-								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count">7</span>
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#"
+									data-bs-toggle="dropdown"><span class="alert-count">7</span>
 									<i class='bx bx-bell'></i>
 								</a>
 								<div class="dropdown-menu dropdown-menu-end">
@@ -568,11 +632,13 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{% static 'admin/assets/images/avatars/avatar-1.png' %}" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'admin/assets/images/avatars/avatar-1.png' %}"
+														class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">Daisy Anderson<span class="msg-time float-end">5 sec
-												ago</span></h6>
+													<h6 class="msg-name">Daisy Anderson<span
+															class="msg-time float-end">5 sec
+															ago</span></h6>
 													<p class="msg-info">The standard chunk of lorem</p>
 												</div>
 											</div>
@@ -582,8 +648,9 @@
 												<div class="notify bg-light-danger text-danger">dc
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">New Orders <span class="msg-time float-end">2 min
-												ago</span></h6>
+													<h6 class="msg-name">New Orders <span class="msg-time float-end">2
+															min
+															ago</span></h6>
 													<p class="msg-info">You have recived new orders</p>
 												</div>
 											</div>
@@ -591,11 +658,13 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{% static 'admin/assets/images/avatars/avatar-2.png' %}" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'admin/assets/images/avatars/avatar-2.png' %}"
+														class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">Althea Cabardo <span class="msg-time float-end">14
-												sec ago</span></h6>
+													<h6 class="msg-name">Althea Cabardo <span
+															class="msg-time float-end">14
+															sec ago</span></h6>
 													<p class="msg-info">Many desktop publishing packages</p>
 												</div>
 											</div>
@@ -603,11 +672,13 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="notify bg-light-success text-success">
-													<img src="{% static 'admin/assets/images/app/outlook.png' %}" width="25" alt="user avatar">
+													<img src="{% static 'admin/assets/images/app/outlook.png' %}"
+														width="25" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">Account Created<span class="msg-time float-end">28 min
-												ago</span></h6>
+													<h6 class="msg-name">Account Created<span
+															class="msg-time float-end">28 min
+															ago</span></h6>
 													<p class="msg-info">Successfully created new email</p>
 												</div>
 											</div>
@@ -618,7 +689,7 @@
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">New Product Approved <span
-												class="msg-time float-end">2 hrs ago</span></h6>
+															class="msg-time float-end">2 hrs ago</span></h6>
 													<p class="msg-info">Your new product has approved</p>
 												</div>
 											</div>
@@ -626,22 +697,26 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{% static 'admin/assets/images/avatars/avatar-4.png' %}" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'admin/assets/images/avatars/avatar-4.png' %}"
+														class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">Katherine Pechon <span class="msg-time float-end">15
-												min ago</span></h6>
+													<h6 class="msg-name">Katherine Pechon <span
+															class="msg-time float-end">15
+															min ago</span></h6>
 													<p class="msg-info">Making this the first true generator</p>
 												</div>
 											</div>
 										</a>
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
-												<div class="notify bg-light-success text-success"><i class='bx bx-check-square'></i>
+												<div class="notify bg-light-success text-success"><i
+														class='bx bx-check-square'></i>
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">Your item is shipped <span class="msg-time float-end">5 hrs
-												ago</span></h6>
+													<h6 class="msg-name">Your item is shipped <span
+															class="msg-time float-end">5 hrs
+															ago</span></h6>
 													<p class="msg-info">Successfully shipped your item</p>
 												</div>
 											</div>
@@ -649,11 +724,13 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="notify bg-light-primary">
-													<img src="{% static 'admin/assets/images/app/github.png' %}" width="25" alt="user avatar">
+													<img src="{% static 'admin/assets/images/app/github.png' %}"
+														width="25" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">New 24 authors<span class="msg-time float-end">1 day
-												ago</span></h6>
+													<h6 class="msg-name">New 24 authors<span
+															class="msg-time float-end">1 day
+															ago</span></h6>
 													<p class="msg-info">24 new authors joined last week</p>
 												</div>
 											</div>
@@ -661,11 +738,13 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{% static 'admin/assets/images/avatars/avatar-8.png' %}" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'admin/assets/images/avatars/avatar-8.png' %}"
+														class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
-													<h6 class="msg-name">Peter Costanzo <span class="msg-time float-end">6 hrs
-												ago</span></h6>
+													<h6 class="msg-name">Peter Costanzo <span
+															class="msg-time float-end">6 hrs
+															ago</span></h6>
 													<p class="msg-info">It was popularised in the 1960s</p>
 												</div>
 											</div>
@@ -679,7 +758,9 @@
 								</div>
 							</li>
 							<li class="nav-item dropdown dropdown-large">
-								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span class="alert-count">8</span>
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#"
+									role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span
+										class="alert-count">8</span>
 									<i class='bx bx-shopping-bag'></i>
 								</a>
 								<div class="dropdown-menu dropdown-menu-end">
@@ -694,7 +775,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/11.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/11.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -712,7 +794,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/02.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/02.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -730,7 +813,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/03.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/03.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -748,7 +832,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/04.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/04.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -766,7 +851,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/05.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/05.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -784,7 +870,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/06.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/06.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -802,7 +889,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/07.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/07.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -820,7 +908,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/08.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/08.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -838,7 +927,8 @@
 											<div class="d-flex align-items-center gap-3">
 												<div class="position-relative">
 													<div class="cart-product rounded-circle bg-light">
-														<img src="{% static 'admin/assets/images/products/09.png' %}" class="" alt="product image">
+														<img src="{% static 'admin/assets/images/products/09.png' %}"
+															class="" alt="product image">
 													</div>
 												</div>
 												<div class="flex-grow-1">
@@ -865,10 +955,13 @@
 								</div>
 							</li>
 						</ul> {% endcomment %}
-					{% comment %} </div> {% endcomment %}
+						{% comment %}
+					</div> {% endcomment %}
 					<div class="user-box dropdown px-3">
-						<a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="{% static 'admin/assets/images/avatars/avatar-2.png' %}" class="user-img" alt="user avatar">
+						<a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
+							href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<img src="{% static 'admin/assets/images/avatars/avatar-2.png' %}" class="user-img"
+								alt="user avatar">
 							<div class="user-info">
 								<p class="user-name mb-0">Admin</p>
 								<p class="designattion mb-0"></p>
@@ -876,15 +969,16 @@
 							<br>
 							<div class="ms-auto">
 								<div class="btn-group">
-									<button type="button" class="btn btn-secondary"><a href="{% url 'main' %}">Log out</button>
+									<button type="button" class="btn btn-secondary"><a href="{% url 'main' %}">Log
+											out</button>
 									</button>
-									
+
 								</div>
-							</div> 
+							</div>
 						</a>
-						
-							
-							
+
+
+
 						</ul>
 					</div>
 				</nav>
@@ -902,7 +996,9 @@
 									<div>
 										<p class="mb-0">Teacher Registration</p>
 										<h4 class="my-1">{{ t_count }} Teachers Registered</h4>
-										{% comment %} <p class="mb-0 font-13"><i class='bx bxs-up-arrow align-middle'></i>$34 Since last week</p> {% endcomment %}
+										{% comment %} <p class="mb-0 font-13"><i
+												class='bx bxs-up-arrow align-middle'></i>$34 Since last week</p> {%
+										endcomment %}
 									</div>
 									<div class="widgets-icons ms-auto"><i class='bx bxs-wallet'></i>
 									</div>
@@ -918,7 +1014,9 @@
 									<div>
 										<p class="mb-0">Student Registration</p>
 										<h4 class="my-1">{{ user_count }} students registered</h4>
-										{% comment %} <p class="mb-0 font-13"><i class='bx bxs-up-arrow align-middle'></i>14% Since last week</p> {% endcomment %}
+										{% comment %} <p class="mb-0 font-13"><i
+												class='bx bxs-up-arrow align-middle'></i>14% Since last week</p> {%
+										endcomment %}
 									</div>
 									<div class="widgets-icons ms-auto"><i class='bx bxs-group'></i>
 									</div>
@@ -934,7 +1032,8 @@
 									<div>
 										<p class="mb-0">Store Visitors</p>
 										<h4 class="my-1">59K</h4>
-										<p class="mb-0 font-13"><i class='bx bxs-down-arrow align-middle'></i>12.4% Since last week</p>
+										<p class="mb-0 font-13"><i class='bx bxs-down-arrow align-middle'></i>12.4%
+											Since last week</p>
 									</div>
 									<div class="widgets-icons ms-auto"><i class='bx bxs-binoculars'></i>
 									</div>
@@ -952,10 +1051,13 @@
 								<div class="d-flex align-items-center">
 									<div>
 										<h5 class="mb-1">Store Metrics</h5>
-										<p class="mb-0 font-13"><i class='bx bxs-calendar'></i>in last 30 days revenue</p>
+										<p class="mb-0 font-13"><i class='bx bxs-calendar'></i>in last 30 days revenue
+										</p>
 									</div>
 									<div class="dropdown ms-auto">
-										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+											data-bs-toggle="dropdown"> <i
+												class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -975,21 +1077,24 @@
 										<div>
 											<p class="mb-0">Revenue</p>
 											<h4 class="my-1 text-white">$4805</h4>
-											<p class="mb-0 font-13"><i class='bx bxs-up-arrow align-middle'></i>$1458 Since last month</p>
+											<p class="mb-0 font-13"><i class='bx bxs-up-arrow align-middle'></i>$1458
+												Since last month</p>
 										</div>
 									</div>
 									<div class="col">
 										<div>
 											<p class="mb-0">Total Customers</p>
 											<h4 class="my-1 text-white">8.4K</h4>
-											<p class="mb-0 font-13"><i class='bx bxs-up-arrow align-middle'></i>12.3% Since last month</p>
+											<p class="mb-0 font-13"><i class='bx bxs-up-arrow align-middle'></i>12.3%
+												Since last month</p>
 										</div>
 									</div>
 									<div class="col">
 										<div>
 											<p class="mb-0">Store Visitors</p>
 											<h4 class="my-1 text-white">59K</h4>
-											<p class="mb-0 font-13"><i class='bx bxs-down-arrow align-middle'></i>2.4% Since last month</p>
+											<p class="mb-0 font-13"><i class='bx bxs-down-arrow align-middle'></i>2.4%
+												Since last month</p>
 										</div>
 									</div>
 								</div>
@@ -1003,10 +1108,13 @@
 								<div class="d-flex align-items-center">
 									<div>
 										<h5 class="mb-1">Top Products</h5>
-										<p class="mb-0 font-13"><i class='bx bxs-calendar'></i>in last 30 days revenue</p>
+										<p class="mb-0 font-13"><i class='bx bxs-calendar'></i>in last 30 days revenue
+										</p>
 									</div>
 									<div class="dropdown ms-auto">
-										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+											data-bs-toggle="dropdown"> <i
+												class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -1047,7 +1155,8 @@
 									<div class="col-sm-6">
 										<div class="d-flex align-items-center">
 											<div class="product-img">
-												<img src="{% static 'admin/assets/images/icons/user-interface.png' %}" alt="" />
+												<img src="{% static 'admin/assets/images/icons/user-interface.png' %}"
+													alt="" />
 											</div>
 											<div class="ms-2">
 												<h6 class="mb-1">Honor Mobile 7x</h6>
@@ -1127,7 +1236,8 @@
 									<div class="col-sm-6">
 										<div class="d-flex align-items-center">
 											<div class="product-img">
-												<img src="{% static 'admin/assets/images/icons/headphones.png' %}" alt="" />
+												<img src="{% static 'admin/assets/images/icons/headphones.png' %}"
+													alt="" />
 											</div>
 											<div class="ms-2">
 												<h6 class="mb-1">Smart Headphones</h6>
@@ -1175,10 +1285,13 @@
 								<div class="d-flex align-items-center">
 									<div>
 										<h5 class="mb-1">Transaction History</h5>
-										<p class="mb-0 font-13"><i class='bx bxs-calendar'></i>in last 30 days revenue</p>
+										<p class="mb-0 font-13"><i class='bx bxs-calendar'></i>in last 30 days revenue
+										</p>
 									</div>
 									<div class="dropdown ms-auto">
-										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+											data-bs-toggle="dropdown"> <i
+												class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -1208,7 +1321,8 @@
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-1.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-1.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Michle Jhon</h6>
@@ -1219,14 +1333,16 @@
 												<td>Jan 10, 2021</td>
 												<td>+256.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Completed</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Completed
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-2.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-2.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Pauline Bird</h6>
@@ -1237,14 +1353,16 @@
 												<td>Jan 12, 2021</td>
 												<td>+566.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">In Progress</div>
+													<div class="badge rounded-pill bg-light text-white w-100">In
+														Progress</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-3.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-3.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Ralph Alva</h6>
@@ -1255,14 +1373,16 @@
 												<td>Jan 14, 2021</td>
 												<td>+636.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Declined</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Declined
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-4.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-4.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from John Roman</h6>
@@ -1273,14 +1393,16 @@
 												<td>Jan 15, 2021</td>
 												<td>+246.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Completed</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Completed
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-7.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-7.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from David Buckley</h6>
@@ -1291,14 +1413,16 @@
 												<td>Jan 16, 2021</td>
 												<td>+876.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">In Progress</div>
+													<div class="badge rounded-pill bg-light text-white w-100">In
+														Progress</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-8.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-8.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Lewis Cruz</h6>
@@ -1309,14 +1433,16 @@
 												<td>Jan 18, 2021</td>
 												<td>+536.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Completed</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Completed
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-9.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-9.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from James Caviness</h6>
@@ -1327,14 +1453,16 @@
 												<td>Jan 18, 2021</td>
 												<td>+536.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Completed</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Completed
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-10.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-10.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Peter Costanzo</h6>
@@ -1345,14 +1473,16 @@
 												<td>Jan 19, 2021</td>
 												<td>+536.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Completed</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Completed
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-11.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-11.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Johnny Seitz</h6>
@@ -1363,14 +1493,16 @@
 												<td>Jan 20, 2021</td>
 												<td>+86.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Declined</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Declined
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-12.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-12.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Lewis Cruz</h6>
@@ -1381,14 +1513,16 @@
 												<td>Jan 18, 2021</td>
 												<td>+536.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Completed</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Completed
+													</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-13.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-13.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from David Buckley</h6>
@@ -1399,14 +1533,16 @@
 												<td>Jan 22, 2021</td>
 												<td>+854.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">In Progress</div>
+													<div class="badge rounded-pill bg-light text-white w-100">In
+														Progress</div>
 												</td>
 											</tr>
 											<tr>
 												<td>
 													<div class="d-flex align-items-center">
 														<div class="">
-															<img src="{% static 'admin/assets/images/avatars/avatar-14.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+															<img src="{% static 'admin/assets/images/avatars/avatar-14.png' %}"
+																class="rounded-circle" width="46" height="46" alt="" />
 														</div>
 														<div class="ms-2">
 															<h6 class="mb-1 font-14">Payment from Thomas Wheeler</h6>
@@ -1417,7 +1553,8 @@
 												<td>Jan 18, 2021</td>
 												<td>+536.00</td>
 												<td>
-													<div class="badge rounded-pill bg-light text-white w-100">Completed</div>
+													<div class="badge rounded-pill bg-light text-white w-100">Completed
+													</div>
 												</td>
 											</tr>
 										</tbody>
@@ -1439,7 +1576,7 @@
 										<p class="mb-0 font-13">From Last Week</p>
 									</div>
 								</div> {% endcomment %}
-							{% comment %} </div>
+								{% comment %} </div>
 							<div id="chart12"></div>
 						</div>
 						<div class="card radius-10 overflow-hidden">
@@ -1484,7 +1621,9 @@
 										<h5 class="mb-0">TOP COURSES</h5>
 									</div>
 									<div class="dropdown ms-auto">
-										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+											data-bs-toggle="dropdown"> <i
+												class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -1502,13 +1641,21 @@
 								<div class="mt-5" id="chart15"></div>
 							</div>
 							<ul class="list-group list-group-flush">
-								<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Kids <span class="badge bg-light-white-2 rounded-pill">25</span>
+								<li
+									class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+									Kids <span class="badge bg-light-white-2 rounded-pill">25</span>
 								</li>
-								<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Women <span class="badge bg-light-white-3 rounded-pill">10</span>
+								<li
+									class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+									Women <span class="badge bg-light-white-3 rounded-pill">10</span>
 								</li>
-								<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Men <span class="badge bg-white rounded-pill text-dark">65</span>
+								<li
+									class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+									Men <span class="badge bg-white rounded-pill text-dark">65</span>
 								</li>
-								<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Furniture <span class="badge bg-light-white-4 text-white rounded-pill">14</span>
+								<li
+									class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+									Furniture <span class="badge bg-light-white-4 text-white rounded-pill">14</span>
 								</li>
 							</ul>
 						</div> {% endcomment %}
@@ -1522,7 +1669,8 @@
 										<h4 class="mb-0">43,540</h4>
 									</div>
 									<div class="">
-										<p class="mb-0 align-self-center font-weight-bold ms-2">4.4 <i class='bx bxs-up-arrow-alt mr-2'></i>
+										<p class="mb-0 align-self-center font-weight-bold ms-2">4.4 <i
+												class='bx bxs-up-arrow-alt mr-2'></i>
 										</p>
 									</div>
 								</div>
@@ -1538,7 +1686,9 @@
 										<h5 class="mb-0">Sales Overiew</h5>
 									</div>
 									<div class="dropdown ms-auto">
-										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+											data-bs-toggle="dropdown"> <i
+												class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -1584,7 +1734,9 @@
 										<h5 class="mb-0">New Customers</h5>
 									</div>
 									<div class="dropdown ms-auto">
-										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+											data-bs-toggle="dropdown"> <i
+												class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -1601,134 +1753,184 @@
 								</div>
 							</div>
 							<div class="customers-list p-3 mb-3">
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-3.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-3.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Emy Jackson</h6>
 										<p class="mb-0 font-13">emy_jac@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-4.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-4.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Martin Hughes</h6>
 										<p class="mb-0 font-13">martin.hug@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-23.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-23.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Laura Madison</h6>
 										<p class="mb-0 font-13">laura_01@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-24.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-24.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Shoan Stephen</h6>
 										<p class="mb-0 font-13">s.stephen@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-20.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-20.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Keate Medona</h6>
 										<p class="mb-0 font-13">Keate@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-16.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-16.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Paul Benn</h6>
 										<p class="mb-0 font-13">pauly.b@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-25.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-25.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Winslet Maya</h6>
 										<p class="mb-0 font-13">winslet_02@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-11.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-11.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Bruno Bernard</h6>
 										<p class="mb-0 font-13">bruno.b@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-17.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-17.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Merlyn Dona</h6>
 										<p class="mb-0 font-13">merlyn.d@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
-								<div class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
+								<div
+									class="customers-list-item d-flex align-items-center border-bottom p-2 cursor-pointer">
 									<div class="">
-										<img src="{% static 'admin/assets/images/avatars/avatar-7.png' %}" class="rounded-circle" width="46" height="46" alt="" />
+										<img src="{% static 'admin/assets/images/avatars/avatar-7.png' %}"
+											class="rounded-circle" width="46" height="46" alt="" />
 									</div>
 									<div class="ms-2">
 										<h6 class="mb-1 font-14">Alister Campel</h6>
 										<p class="mb-0 font-13">alister_42@xyz.com</p>
 									</div>
-									<div class="list-inline d-flex customers-contacts ms-auto">	<a href="javascript:;" class="list-inline-item"><i class='bx bxs-envelope'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bxs-microphone'></i></a>
-										<a href="javascript:;" class="list-inline-item"><i class='bx bx-dots-vertical-rounded'></i></a>
+									<div class="list-inline d-flex customers-contacts ms-auto"> <a href="javascript:;"
+											class="list-inline-item"><i class='bx bxs-envelope'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bxs-microphone'></i></a>
+										<a href="javascript:;" class="list-inline-item"><i
+												class='bx bx-dots-vertical-rounded'></i></a>
 									</div>
 								</div>
 							</div>
@@ -1742,7 +1944,9 @@
 										<h5 class="mb-0">Orders Summary</h5>
 									</div>
 									<div class="dropdown ms-auto">
-										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+										<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+											data-bs-toggle="dropdown"> <i
+												class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -1783,7 +1987,8 @@
 								<h5 class="mb-0">Orders Summary</h5>
 							</div>
 							<div class="dropdown ms-auto">
-								<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">	<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
+								<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
+									<i class='bx bx-dots-horizontal-rounded font-22  text-option'></i>
 								</a>
 								<ul class="dropdown-menu">
 									<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -1798,7 +2003,7 @@
 								</ul>
 							</div>
 						</div>
-						<hr/>
+						<hr />
 						<div class="table-responsive">
 							<table class="table align-middle mb-0">
 								<thead class="table-light">
@@ -1818,7 +2023,8 @@
 										<td>
 											<div class="d-flex align-items-center">
 												<div class="recent-product-img">
-													<img src="{% static 'admin/assets/images/icons/chair.png' %}" alt="">
+													<img src="{% static 'admin/assets/images/icons/chair.png' %}"
+														alt="">
 												</div>
 												<div class="ms-2">
 													<h6 class="mb-1 font-14">Light Blue Chair</h6>
@@ -1829,13 +2035,16 @@
 										<td>12 Jul 2020</td>
 										<td>$64.00</td>
 										<td>
-											<div class="d-flex align-items-center text-white">	<i class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
+											<div class="d-flex align-items-center text-white"> <i
+													class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
 												<span>Pending</span>
 											</div>
 										</td>
 										<td>
-											<div class="d-flex order-actions">	<a href="javascript:;" class=""><i class="bx bx-cog"></i></a>
-												<a href="javascript:;" class="ms-4"><i class='bx bx-down-arrow-alt'></i></a>
+											<div class="d-flex order-actions"> <a href="javascript:;" class=""><i
+														class="bx bx-cog"></i></a>
+												<a href="javascript:;" class="ms-4"><i
+														class='bx bx-down-arrow-alt'></i></a>
 											</div>
 										</td>
 									</tr>
@@ -1844,7 +2053,8 @@
 										<td>
 											<div class="d-flex align-items-center">
 												<div class="recent-product-img">
-													<img src="{% static 'admin/assets/images/icons/shoes.png' %}" alt="">
+													<img src="{% static 'admin/assets/images/icons/shoes.png' %}"
+														alt="">
 												</div>
 												<div class="ms-2">
 													<h6 class="mb-1 font-14">Green Sport Shoes</h6>
@@ -1855,13 +2065,16 @@
 										<td>14 Jul 2020</td>
 										<td>$45.00</td>
 										<td>
-											<div class="d-flex align-items-center text-white">	<i class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
+											<div class="d-flex align-items-center text-white"> <i
+													class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
 												<span>Dispatched</span>
 											</div>
 										</td>
 										<td>
-											<div class="d-flex order-actions">	<a href="javascript:;" class=""><i class="bx bx-cog"></i></a>
-												<a href="javascript:;" class="ms-4"><i class='bx bx-down-arrow-alt'></i></a>
+											<div class="d-flex order-actions"> <a href="javascript:;" class=""><i
+														class="bx bx-cog"></i></a>
+												<a href="javascript:;" class="ms-4"><i
+														class='bx bx-down-arrow-alt'></i></a>
 											</div>
 										</td>
 									</tr>
@@ -1870,7 +2083,8 @@
 										<td>
 											<div class="d-flex align-items-center">
 												<div class="recent-product-img">
-													<img src="{% static 'admin/assets/images/icons/headphones.png' %}" alt="">
+													<img src="{% static 'admin/assets/images/icons/headphones.png' %}"
+														alt="">
 												</div>
 												<div class="ms-2">
 													<h6 class="mb-1 font-14">Red Headphone 07</h6>
@@ -1881,13 +2095,16 @@
 										<td>15 Jul 2020</td>
 										<td>$67.00</td>
 										<td>
-											<div class="d-flex align-items-center text-white">	<i class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
+											<div class="d-flex align-items-center text-white"> <i
+													class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
 												<span>Completed</span>
 											</div>
 										</td>
 										<td>
-											<div class="d-flex order-actions">	<a href="javascript:;" class=""><i class="bx bx-cog"></i></a>
-												<a href="javascript:;" class="ms-4"><i class='bx bx-down-arrow-alt'></i></a>
+											<div class="d-flex order-actions"> <a href="javascript:;" class=""><i
+														class="bx bx-cog"></i></a>
+												<a href="javascript:;" class="ms-4"><i
+														class='bx bx-down-arrow-alt'></i></a>
 											</div>
 										</td>
 									</tr>
@@ -1907,13 +2124,16 @@
 										<td>18 Jul 2020</td>
 										<td>$87.00</td>
 										<td>
-											<div class="d-flex align-items-center text-white">	<i class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
+											<div class="d-flex align-items-center text-white"> <i
+													class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
 												<span>Completed</span>
 											</div>
 										</td>
 										<td>
-											<div class="d-flex order-actions">	<a href="javascript:;" class=""><i class="bx bx-cog"></i></a>
-												<a href="javascript:;" class="ms-4"><i class='bx bx-down-arrow-alt'></i></a>
+											<div class="d-flex order-actions"> <a href="javascript:;" class=""><i
+														class="bx bx-cog"></i></a>
+												<a href="javascript:;" class="ms-4"><i
+														class='bx bx-down-arrow-alt'></i></a>
 											</div>
 										</td>
 									</tr>
@@ -1922,7 +2142,8 @@
 										<td>
 											<div class="d-flex align-items-center">
 												<div class="recent-product-img">
-													<img src="{% static 'admin/assets/images/icons/user-interface.png' %}" alt="">
+													<img src="{% static 'admin/assets/images/icons/user-interface.png' %}"
+														alt="">
 												</div>
 												<div class="ms-2">
 													<h6 class="mb-1 font-14">Purple Mobile Phone</h6>
@@ -1933,13 +2154,16 @@
 										<td>20 Jul 2020</td>
 										<td>$75.00</td>
 										<td>
-											<div class="d-flex align-items-center text-white">	<i class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
+											<div class="d-flex align-items-center text-white"> <i
+													class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
 												<span>Pending</span>
 											</div>
 										</td>
 										<td>
-											<div class="d-flex order-actions">	<a href="javascript:;" class=""><i class="bx bx-cog"></i></a>
-												<a href="javascript:;" class="ms-4"><i class='bx bx-down-arrow-alt'></i></a>
+											<div class="d-flex order-actions"> <a href="javascript:;" class=""><i
+														class="bx bx-cog"></i></a>
+												<a href="javascript:;" class="ms-4"><i
+														class='bx bx-down-arrow-alt'></i></a>
 											</div>
 										</td>
 									</tr>
@@ -1948,7 +2172,8 @@
 										<td>
 											<div class="d-flex align-items-center">
 												<div class="recent-product-img">
-													<img src="{% static 'admin/assets/images/icons/watch.png' %}" alt="">
+													<img src="{% static 'admin/assets/images/icons/watch.png' %}"
+														alt="">
 												</div>
 												<div class="ms-2">
 													<h6 class="mb-1 font-14">Smart Hand Watch</h6>
@@ -1959,13 +2184,16 @@
 										<td>22 Jul 2020</td>
 										<td>$80.00</td>
 										<td>
-											<div class="d-flex align-items-center text-white">	<i class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
+											<div class="d-flex align-items-center text-white"> <i
+													class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
 												<span>Dispatched</span>
 											</div>
 										</td>
 										<td>
-											<div class="d-flex order-actions">	<a href="javascript:;" class=""><i class="bx bx-cog"></i></a>
-												<a href="javascript:;" class="ms-4"><i class='bx bx-down-arrow-alt'></i></a>
+											<div class="d-flex order-actions"> <a href="javascript:;" class=""><i
+														class="bx bx-cog"></i></a>
+												<a href="javascript:;" class="ms-4"><i
+														class='bx bx-down-arrow-alt'></i></a>
 											</div>
 										</td>
 									</tr>
@@ -1974,7 +2202,8 @@
 										<td>
 											<div class="d-flex align-items-center">
 												<div class="recent-product-img">
-													<img src="{% static 'admin/assets/images/icons/tshirt.png' %}" alt="">
+													<img src="{% static 'admin/assets/images/icons/tshirt.png' %}"
+														alt="">
 												</div>
 												<div class="ms-2">
 													<h6 class="mb-1 font-14">T-Shirt Blue</h6>
@@ -1985,13 +2214,16 @@
 										<td>28 Jul 2020</td>
 										<td>$96.00</td>
 										<td>
-											<div class="d-flex align-items-center text-white">	<i class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
+											<div class="d-flex align-items-center text-white"> <i
+													class='bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1'></i>
 												<span>Pending</span>
 											</div>
 										</td>
 										<td>
-											<div class="d-flex order-actions">	<a href="javascript:;" class=""><i class="bx bx-cog"></i></a>
-												<a href="javascript:;" class="ms-4"><i class='bx bx-down-arrow-alt'></i></a>
+											<div class="d-flex order-actions"> <a href="javascript:;" class=""><i
+														class="bx bx-cog"></i></a>
+												<a href="javascript:;" class="ms-4"><i
+														class='bx bx-down-arrow-alt'></i></a>
 											</div>
 										</td>
 									</tr>
@@ -2006,7 +2238,8 @@
 		<!--start overlay-->
 		<div class="overlay toggle-icon"></div>
 		<!--end overlay-->
-		<!--Start Back To Top Button--> <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
+		<!--Start Back To Top Button--> <a href="javaScript:;" class="back-to-top"><i
+				class='bx bxs-up-arrow-alt'></i></a>
 		<!--End Back To Top Button-->
 		{% comment %} <footer class="page-footer">
 			<p class="mb-0">Copyright © 2025. All right reserved.</p>
@@ -2022,7 +2255,7 @@
 				<h5 class="mb-0 text-uppercase">Theme Customizer</h5>
 				<button type="button" class="btn-close ms-auto close-switcher" aria-label="Close"></button>
 			</div>
-			<hr/>
+			<hr />
 			<p class="mb-0">Gaussian Texture</p>
 			<hr>
 			<ul class="switcher">
@@ -2046,7 +2279,7 @@
 				<li id="theme13"></li>
 				<li id="theme14"></li>
 				<li id="theme15"></li>
-			  </ul>
+			</ul>
 		</div>
 	</div>
 	<!--end switcher-->
@@ -2061,11 +2294,11 @@
 	<script src="{% static 'admin/assets/plugins/datatable/js/jquery.dataTables.min.js' %}"></script>
 	<script src="{% static 'admin/assets/plugins/datatable/js/dataTables.bootstrap5.min.js' %}"></script>
 	<script>
-		$(document).ready(function() {
+		$(document).ready(function () {
 			$('#Transaction-History').DataTable({
 				lengthMenu: [[6, 10, 20, -1], [6, 10, 20, 'Todos']]
 			});
-		  } );
+		});
 	</script>
 	<script src="{% static 'admin/assets/js/index.js' %}"></script>
 	<!--app JS-->
@@ -2078,4 +2311,5 @@
 
 
 <!-- Mirrored from codervent.com/dashtrans/demo/vertical/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 11 Jan 2025 06:23:11 GMT -->
+
 </html>

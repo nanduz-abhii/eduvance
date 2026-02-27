@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Upload Essay - EduVance</title>
+    <!-- Latest Bootstrap min CSS -->
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <!-- Icon CSS -->
+    <link rel="stylesheet" href="./assets/fonts/themify-icons.css">
+    <link rel="stylesheet" href="./assets/css/line-awesome.css">
+    <link rel="stylesheet" href="./assets/fonts/fontawesome/fontawesome.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+
+<body>
+
+    <header id="navigation" class="header-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-6 align-self-center">
+                    <div class="site-logo">
+                        <img src="./assets/img/logotwo.svg" alt="EduVance">
+                    </div>
+                </div>
+
+                <div class="col-xl-9 col-lg-9 col-md-6 menu_col justify-content-start d-flex align-self-center">
+                    <nav id="main-menu">
+                        <ul>
+                            <li><a href="dashboard.html">Dashboard</a></li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Upload</a>
+                                <ul class="sub-menu">
+                                    <li><a href="submit.html">Upload Essay</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="index.html">Log Out</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Start Main Banner -->
+    <section class="main-banner" style="background-image: url(./assets/img/bg/banner.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 text-center">
+                    <h2>Upload Essay</h2>
+                    <p>
+                        <a href="dashboard.html">Dashboard</a> <i class='bx bx-chevrons-right'></i> Upload
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Main Banner -->
+
+    <!-- Start Upload Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="upload-form-wrapper"
+                        style="background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+                        <form action="#" method="post" enctype="multipart/form-data">
+                            <div class="form-group mb-4">
+                                <label for="essayTitle" class="form-label" style="font-weight: 600;">Essay Title</label>
+                                <input type="text" class="form-control" id="essayTitle" name="essayTitle"
+                                    placeholder="Enter the title of your essay" required style="height: 50px;">
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="essayFile" class="form-label" style="font-weight: 600;">Choose Essay
+                                    File</label>
+                                <input type="file" class="form-control" id="essayFile" name="essayFile"
+                                    accept=".pdf,.doc,.docx" required style="padding: 10px;">
+                                <small class="text-muted">Accepted formats: PDF, DOC, DOCX</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100"
+                                style="background: #0D5FF9; border: none; padding: 15px;">Upload Essay</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Upload Section -->
+
+
+    <!-- Latest jQuery -->
+    <script src="./assets/js/jquery.min.js"></script>
+    <!-- Bootstrap.js -->
+    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Custom Script -->
+    <script src="./assets/js/scripts.js"></script>
+</body>
+
+</html>
