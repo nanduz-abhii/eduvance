@@ -33,9 +33,19 @@ def admin(request):
     t_count = teacherreg.objects.all().count()
     return render(request, 'admin.html',{'user_count': user_count,'t_count':t_count})
 def user(request):
-    results = exam.objects.all()
+    from datetime import date, timedelta
+    stud_id = request.session.get('stud_id')
+    results = exam.objects.all().order_by('date')
     teachers = teacherreg.objects.filter(login_id__status='1')
-    return render(request, 'user.html', {'data': results, 'teachers': teachers})
+    today = date.today()
+    notification_count = results.count()
+    upcoming_alert = results.filter(date__lte=today + timedelta(days=2), date__gte=today)
+    return render(request, 'user.html', {
+        'data': results,
+        'teachers': teachers,
+        'notification_count': notification_count,
+        'upcoming_alert': upcoming_alert,
+    })
 def tuser(request):
     teachers = teacherreg.objects.filter(login_id__status='1')
     return render(request, 'tuser.html', {'teachers': teachers})
@@ -45,14 +55,17 @@ def studentreg(request):
         logins=loginform(request.POST)
         print(form)
         if form.is_valid() and logins.is_valid():
+            b=form.save(commit=False)
             a=logins.save(commit=False)
             a.usertype=1
+            a.status=1 # Approve student by default
+            # Force username to be the University Reg No (admno)
+            a.username = b.admno
             a.save()
-            b=form.save(commit=False)
             b.login_id=a
             b.save()
             messages.success(request,"Form successfully submitted")
-        return redirect('main')
+            return redirect('main')
     else:
         form=studentform()
         logins=loginform()
@@ -95,10 +108,13 @@ def teacherregister(request):
         logins = loginform(request.POST)
         print(form)
         if form.is_valid() and logins.is_valid():
-            
             a = logins.save(commit=False)
             a.usertype = 2  
+            # Auto-generate username from Email for teachers
+            if not a.username and a.email:
+                a.username = a.email
             a.save()
+            
             b = form.save(commit=False)
             b.login_id = a  
             b.save()
@@ -460,41 +476,85 @@ def viewattendance(request):
     form=attendance()
     dept = request.GET.get('department') 
     sem = request.GET.get('semester') 
+    subject = request.GET.get('subject')
     results = Studentreg.objects.filter(department=dept,semester=sem) 
+    
     if results:
-        return render(request, 'attendancetable.html',{'results':results})
+        # Fetch today's attendance for this subject and department to highlight status
+        today_attendance = Attendance.objects.filter(
+            current_date=date.today(),
+            subject=subject
+        )
+        
+        # Map student IDs to their attendance record for quick lookup
+        marked_map = {att.login_id_id: att for att in today_attendance}
+        
+        # Add status to each student object
+        for student in results:
+            att_record = marked_map.get(student.id)
+            if att_record:
+                if att_record.present == 1: student.attendance_status = 'present'
+                elif att_record.absent == 2: student.attendance_status = 'absent'
+            else:
+                student.attendance_status = None
+
+        return render(request, 'attendancetable.html', {
+            'results': results, 
+            'subject': subject
+        })
     print(results)
     return render(request, 'attendance.html',{'form':form})
 
-def present(request,id):
+def present(request,id, subject_name):
     a=get_object_or_404(Studentreg,id=id)
     tea_id = request.session.get('t_id')
     login_details = get_object_or_404(teacherreg, login_id=tea_id)
-    if Attendance.objects.filter(t_id= login_details,login_id=a,present=1,current_date=date.today()).exists():
-        return JsonResponse({'status': 'error', 'message': ' Attendance Already marked for today!'})
-    else:
-        Attendance.objects.create(t_id= login_details,login_id=a,present=1)
-        return JsonResponse({'status': 'success', 'message': 'Attendance marked Now!'})
+    # Delete any existing record for this student and subject today to overwrite
+    Attendance.objects.filter(login_id=a, subject=subject_name, current_date=date.today()).delete()
+    
+    Attendance.objects.create(t_id= login_details,login_id=a,present=1, subject=subject_name)
+    return JsonResponse({'status': 'success', 'message': f'Attendance marked for {subject_name}!'})
 
 
-def absent(request,id):
+def absent(request,id, subject_name):
     a=get_object_or_404(Studentreg,id=id)
     tea_id = request.session.get('t_id')
     login_details = get_object_or_404(teacherreg, login_id=tea_id)
-    if Attendance.objects.filter(t_id= login_details,login_id=a,absent=2,current_date=date.today()).exists():
-        return JsonResponse({'status': 'error', 'message': ' Attendance Already marked for today!'})
-    else:
-        Attendance.objects.create(t_id= login_details,login_id=a,absent=2)
-        return JsonResponse({'status': 'success', 'message': 'Attendance marked Now!'})
+    # Delete any existing record for this student and subject today to overwrite
+    Attendance.objects.filter(login_id=a, subject=subject_name, current_date=date.today()).delete()
+    
+    Attendance.objects.create(t_id= login_details,login_id=a,absent=2, subject=subject_name)
+    return JsonResponse({'status': 'success', 'message': f'Attendance marked for {subject_name}!'})
 
 def attendanceviewt(request):
-    form=attendanceview()
-    date = request.GET.get('date') 
-    results = Attendance.objects.filter(current_date=date,present=1) 
-    if results:
-        return render(request, 'attendancet.html',{'results':results})
-    print(results)
-    return render(request,'checkattendance.html',{'form':form})
+    form = attendanceview()
+    if request.GET.get('subject'):
+        dept = request.GET.get('department')
+        sem = request.GET.get('semester')
+        subject = request.GET.get('subject')
+        date = request.GET.get('date')
+        
+        # Filter attendance records based on provided criteria
+        results = Attendance.objects.filter(
+            login_id__department__iexact=dept,
+            login_id__semester=sem,
+            subject__iexact=subject,
+            current_date=date
+        ).order_by('login_id__roll_number')
+
+        if results:
+            context = {
+                'results': results,
+                'dept': dept,
+                'sem': sem,
+                'subject': subject,
+                'date': date
+            }
+            return render(request, 'attendance_results_teacher.html', context)
+        else:
+            messages.info(request, "No attendance records found for the given criteria.")
+            
+    return render(request, 'check_attendance_teacher.html', {'form': form})
 
 def markupload(request):
     form=attendance()
@@ -621,15 +681,221 @@ def subchoice(request):
     return render(request, 'subchoicestud.html', {'form': form})
 
 def uploadmarks(request):
-    form=uploadmark()
-    dept = request.GET.get('department') 
-    sem = request.GET.get('semester') 
-    print(dept)
+    form = uploadmark()
+    dept = request.GET.get('department')
+    sem = request.GET.get('semester')
     
-    results = Studentreg.objects.filter(department=dept,semester=sem) 
-    if results:
-        return render(request, 'markuploadviewt.html',{'results':results})
-    print(results)
+    # POST handler for bulk saving marks
+    if request.method == 'POST' and 'upload_marks' in request.POST:
+        dept = request.POST.get('dept')
+        sem = int(request.POST.get('sem', 0))
+        logid = request.session.get('t_id')
+        teacher = get_object_or_404(teacherreg, login_id=logid)
+        
+        # Process existing students
+        students = Studentreg.objects.filter(department=dept, semester=sem)
+        for student in students:
+            prefix = f"mark_{student.id}_"
+            for key, value in request.POST.items():
+                if key.startswith(prefix):
+                    subject_name = key[len(prefix):]
+                    if value.strip() != '':
+                        try:
+                            # Use get_or_create to ensure the mark entry exists
+                            InternalMarks.objects.update_or_create(
+                                subject=subject_name,
+                                stud_id=student,
+                                defaults={'marks': int(value), 'login_id': teacher}
+                            )
+                        except (ValueError, TypeError): pass
+        
+        # Process manually added new students
+        # We look for rows indexed by number, e.g., manual_name_1, manual_roll_1, etc.
+        item_keys = [k for k in request.POST.keys() if k.startswith('manual_name_')]
+        for name_key in item_keys:
+            idx = name_key.split('_')[-1]
+            name = request.POST.get(f'manual_name_{idx}')
+            roll = request.POST.get(f'manual_roll_{idx}')
+            reg = request.POST.get(f'manual_reg_{idx}')
+            
+            if name and reg: # Minimum required to identify/create a student
+                # Use reg (admno) as username for auto-login creation
+                login_obj, created = Login.objects.get_or_create(
+                    username=reg,
+                    defaults={'password': '123', 'usertype': 1, 'status': 1}
+                )
+                
+                # Ensure student is tied to this dept/sem even if they existed before
+                student_obj, s_created = Studentreg.objects.get_or_create(
+                    admno=reg,
+                    defaults={
+                        'name': name,
+                        'roll_number': roll,
+                        'department': dept,
+                        'semester': sem,
+                        'login_id': login_obj,
+                        'address': 'Manual Entry',
+                        'gender': 'Not Set',
+                        'dob': date.today(),
+                        'contactno': '0000000000'
+                    }
+                )
+                if not s_created:
+                    student_obj.department = dept
+                    student_obj.semester = sem
+                    if name: student_obj.name = name
+                    if roll: student_obj.roll_number = roll
+                    student_obj.save()
+                
+                # Update info if student existed but was moved? (Optional)
+                
+                # Process marks for this new student
+                mark_prefix = f"manual_mark_{idx}_"
+                for m_key, m_val in request.POST.items():
+                    if m_key.startswith(mark_prefix):
+                        subject_name = m_key[len(mark_prefix):]
+                        if m_val.strip() != '':
+                            try:
+                                InternalMarks.objects.update_or_create(
+                                    subject=subject_name,
+                                    stud_id=student_obj,
+                                    defaults={'marks': int(m_val), 'login_id': teacher}
+                                )
+                            except ValueError: pass
+
+        messages.success(request, f'Marks for {dept.upper()} Semester {sem} saved correctly.')
+        return redirect('login')
+
+    if dept and sem:
+        try:
+            sem_int = int(sem)
+        except:
+            sem_int = 0
+        students = Studentreg.objects.filter(department=dept, semester=sem_int).order_by('roll_number')
+        
+        # We now ALLOW proceeding even if no students are found (teacher can add them manually)
+        
+        if True: # Always proceed to the sheet if dept/sem are selected
+            # logic to get KTU defaults (Standard Engineering Subjects)
+            ktu_defaults = {
+                '1': ['Mathematics I', 'Engineering Physics', 'Engineering Chemistry', 'Engineering Graphics', 'Engineering Mechanics', 'Basic Civil Engineering', 'Basic Mechanical Engineering', 'Basic Electrical Engineering', 'Basic Electronics Engineering'],
+                '2': ['Mathematics II', 'Physics/Chemistry', 'Graphics/Mechanics', 'Introduction to Computing', 'Professional Ethics'],
+                '3': ['Discrete Mathematics', 'Data Structures', 'Logic System Design', 'Object Oriented Programming'],
+                '4': ['Graph Theory', 'Computer Organization', 'Operating Systems', 'Design & Analysis of Algorithms'],
+                '5': ['Formal Languages', 'Computer Networks', 'Microprocessors', 'Database Management', 'Management of Software Systems'],
+                '6': ['Computer Networks', 'Compiler Design', 'Machine Learning', 'Computer Graphics', 'Disaster Management', 'Industrial Management'],
+                '7': ['AI', 'Cloud Computing', 'Cryptography', 'Distributed Computing', 'Elective 1', 'Elective 2'],
+                '8': ['Data Mining', 'Internet of Things', 'Embedded Systems', 'Elective 3', 'Elective 4']
+            }
+            
+            # Special override for AI & DS in S6
+            if dept == 'aids' and sem == '6':
+                ktu_defaults['6'] = ['Computer Networks', 'Compiler Design', 'Machine Learning', 'Computer Graphics', 'Disaster Management', 'Industrial Management', 'Microprocessor Lab', 'Machine Learning Lab']
+            
+            all_subjects = []
+            
+            # 1. Gather all unique subjects for this dept/sem from DB
+            subj_meta = Subject.objects.filter(dept=dept, sem=sem).first()
+            if subj_meta:
+                # Check related Courses and Electives
+                for c in Course.objects.filter(subject=subj_meta):
+                    if c.name not in all_subjects: all_subjects.append(c.name)
+                for e in ElectiveCourse.objects.filter(subject=subj_meta):
+                    if e.name not in all_subjects: all_subjects.append(e.name)
+                
+                # Check aggregate models
+                for model in [Subjectadd, SubjectDetail]:
+                    detail_obj = model.objects.filter(subject=subj_meta).first()
+                    if detail_obj:
+                        fields = ['major1', 'major2', 'major3', 'minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']
+                        for field in fields:
+                            val = getattr(detail_obj, field, None)
+                            if val:
+                                for s in val.split(','):
+                                    s_clean = s.strip()
+                                    if s_clean and s_clean not in all_subjects:
+                                        all_subjects.append(s_clean)
+            
+            # 2. Use KTU defaults if nothing found in DB
+            if not all_subjects:
+                all_subjects = ktu_defaults.get(str(sem), ['Internal Subject 1', 'Internal Subject 2'])
+            
+            # 3. Supplemental: Subjects already having marks in DB for this branch/sem
+            existing_marks_subjects = InternalMarks.objects.filter(
+                stud_id__department=dept, 
+                stud_id__semester=sem
+            ).values_list('subject', flat=True).distinct()
+            
+            for ms in existing_marks_subjects:
+                if ms and ms not in all_subjects:
+                    all_subjects.append(ms)
+
+            # 4. Supplemental: Subjects chosen by students
+            # Some elective names might not be in the branch-wide list if they are custom-entered
+            for student in students:
+                selection = StudentSubjectSelection.objects.filter(student=student).first()
+                if selection:
+                    # Same fields
+                    fields = [
+                        'minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 
+                        'vac1', 'vac2', 'sec', 'elective1', 'elective2'
+                    ]
+                    for field in fields:
+                        val = getattr(selection, field, None)
+                        if val:
+                            for s in val.split(','):
+                                s_clean = s.strip()
+                                if s_clean and s_clean not in all_subjects:
+                                    all_subjects.append(s_clean)
+
+            # Sort subjects for display
+            all_subjects = sorted(list(set(all_subjects)))
+
+            student_data = []
+            for student in students:
+                # Get existing marks
+                marks_queryset = InternalMarks.objects.filter(stud_id=student)
+                marks_dict = {m.subject: m.marks for m in marks_queryset}
+                
+                # Check assigned subjects
+                assigned = set()
+                selection = StudentSubjectSelection.objects.filter(student=student).first()
+                if selection:
+                    if selection.subject:
+                        sd = selection.subject
+                        for f in ['major1', 'major2', 'major3']:
+                            v = getattr(sd, f, None)
+                            if v:
+                                for s in v.split(','): assigned.add(s.strip())
+                    for f in ['minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']:
+                        v = getattr(selection, f, None)
+                        if v:
+                             for s in v.split(','): assigned.add(s.strip())
+                
+                # Prepare marks in the same order as subject_columns
+                marks_ordered = []
+                for sub in all_subjects:
+                    marks_ordered.append({
+                        'subject': sub,
+                        'value': marks_dict.get(sub, ''),
+                        'is_assigned': sub in assigned
+                    })
+
+                student_data.append({
+                    'id': student.id,
+                    'roll_number': student.roll_number or 'N/A',
+                    'reg_no': student.admno,
+                    'name': student.name,
+                    'marks_list': marks_ordered
+                })
+
+            return render(request, 'markuploadviewt.html', {
+                'students_data': student_data,
+                'subject_columns': all_subjects,
+                'dept': dept,
+                'sem': sem
+            })
+            
     return render(request, 'markupload.html',{'form':form})
 
 
@@ -831,15 +1097,70 @@ def demote(request,id):
 
 def studattendance(request):
     stud_id = request.session.get('stud_id')
-    print(stud_id)
-    student = get_object_or_404(Studentreg, login_id=stud_id) 
-    print(student)
-    attendance = Attendance.objects.filter(login_id=student)
-    perc=attendance.count()
-    percentage=(perc/90)*100
-    percentage=int(percentage)
-    print(attendance)
-    return render(request,'studattendance.html',{'data':attendance,'percentage':percentage})
+    student = get_object_or_404(Studentreg, login_id=stud_id)
+    
+    # Map student dept code to Subject table's dept name
+    dept_map = {
+        'cse': 'CSE',
+        'aids': 'AI & DS',
+        'me': 'Mechanical Engineering',
+        'ce': 'Civil Engineering',
+        'ece': 'Electronics & Communication'
+    }
+    
+    mapped_dept = dept_map.get(student.department.lower(), student.department)
+    
+    # Core/Elective subjects from schema
+    schema_subjects = []
+    subj_meta = Subject.objects.filter(dept__iexact=mapped_dept, sem=student.semester).first()
+    if subj_meta:
+        for model in [Subjectadd, SubjectDetail]:
+            detail_obj = model.objects.filter(subject=subj_meta).first()
+            if detail_obj:
+                for field in ['major1', 'major2', 'major3']:
+                    val = getattr(detail_obj, field, None)
+                    if val:
+                        for s in val.split(','):
+                            s_clean = s.strip()
+                            if s_clean and s_clean not in schema_subjects:
+                                schema_subjects.append(s_clean)
+                                
+    # Fetch subjects from actual attendance records as well
+    attendance_records = Attendance.objects.filter(login_id=student)
+    recorded_subjects = list(attendance_records.values_list('subject', flat=True).distinct())
+    
+    # Combine both lists
+    all_subjects = list(set(schema_subjects + recorded_subjects))
+    all_subjects = [s for s in all_subjects if s] # Filter out empty strings
+    
+    total_present = attendance_records.filter(present=1).count()
+    subject_attendance = []
+    for sub in all_subjects:
+        sub_present = attendance_records.filter(subject=sub, present=1).count()
+        sub_total = attendance_records.filter(subject=sub).count()
+        sub_percentage = (sub_present / sub_total * 100) if sub_total > 0 else 0
+        
+        subject_attendance.append({
+            'name': sub,
+            'branch': student.department.upper(),
+            'sem': student.semester,
+            'percentage': round(sub_percentage, 2)
+        })
+
+    # Overall percentage across everything
+    total_recs = attendance_records.count()
+    overall_percentage = (total_present / total_recs * 100) if total_recs > 0 else 0
+
+    return render(request, 'studattendance.html', {
+        'subject_attendance': subject_attendance,
+        'overall_percentage': round(overall_percentage, 2)
+    })
+
+def stud_daily_attendance(request):
+    stud_id = request.session.get('stud_id')
+    student = get_object_or_404(Studentreg, login_id=stud_id)
+    records = Attendance.objects.filter(login_id=student).order_by('-current_date')
+    return render(request, 'stud_daily_attendance.html', {'records': records})
 
 def complaint(request):
     stud_id = request.session.get('stud_id')
@@ -1086,27 +1407,37 @@ def adminexam(request):
         form = Examdate(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('admin') 
+            messages.success(request, 'University Exam Notification added!')
+            return redirect('adminexam') 
     else:
         form = Examdate()
-    return render(request,'adminexam.html',{'form':form})
+    exams = exam.objects.all().order_by('date')
+    return render(request, 'adminexam.html', {'form': form, 'exams': exams})
 
 def studexamview(request):
     results =exam.objects.all()
     return render(request,'user.html',{'data':results})
 
 def notifications(request):
+    from datetime import date, timedelta
     stud_id = request.session.get('stud_id')
-    login_id = get_object_or_404(Studentreg, id=stud_id) 
-
-    results =exam.objects.all()
-    return render(request,'notifications.html',{'data':results})
+    login_id = get_object_or_404(Studentreg, login_id=stud_id)
+    today = date.today()
+    results = exam.objects.all().order_by('date')
+    upcoming_alert = results.filter(date__lte=today + timedelta(days=2), date__gte=today)
+    return render(request, 'notifications.html', {'data': results, 'upcoming_alert': upcoming_alert})
 def notificationt(request):
+    from datetime import date, timedelta
     te_id = request.session.get('t_id')
-    login_id = get_object_or_404(Studentreg, id=te_id) 
+    today = date.today()
+    results = exam.objects.all().order_by('date')
+    upcoming_alert = results.filter(date__lte=today + timedelta(days=2), date__gte=today)
+    return render(request, 'notificationt.html', {'data': results, 'upcoming_alert': upcoming_alert})
 
-    results =exam.objects.all()
-    return render(request,'notificationt.html',{'data':results})
+def delete_exam(request, id):
+    e = get_object_or_404(exam, id=id)
+    e.delete()
+    return redirect('adminexam')
 
 import fitz  # PyMuPDF for extracting text
 
@@ -1321,39 +1652,63 @@ def subjectstudview(request):
     student_id = request.session.get('stud_id')
     st = get_object_or_404(Studentreg, login_id=student_id)
 
-    # Student's selected subjects
+    # 1. Gather all possible subjects for this student (Core + Electives)
+    all_subjects = []
+    
+    # Get subjects defined by HOD for this dept/sem
+    subj_meta = Subject.objects.filter(dept=st.department, sem=st.semester).first()
+    if subj_meta:
+        for model in [Subjectadd, SubjectDetail]:
+            detail_obj = model.objects.filter(subject=subj_meta).first()
+            if detail_obj:
+                fields = ['major1', 'major2', 'major3', 'minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']
+                for field in fields:
+                    val = getattr(detail_obj, field, None)
+                    if val:
+                        for s in val.split(','):
+                            s_clean = s.strip()
+                            if s_clean and s_clean not in all_subjects:
+                                all_subjects.append(s_clean)
+
+    # 2. Get subjects specifically chosen by the student
     selection = StudentSubjectSelection.objects.filter(student=st).first()
-    subject_detail = selection.subject if selection else None
-
-    # Core subjects
-    core_subjects = []
-    if subject_detail:
-        for field in ['major1', 'major2', 'major3']:
-            field_value = getattr(subject_detail, field, None)
-            if field_value:
-                core_subjects.extend([sub.strip() for sub in field_value.split(',') if sub.strip()])
-
-    # Elective subjects
-    elective_fields = ['minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']
-    elective_subjects = []
+    chosen_subjects = []
     if selection:
-        for field in elective_fields:
+        fields = ['minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']
+        for field in fields:
             val = getattr(selection, field, None)
             if val:
-                elective_subjects.append(val.strip())
+                for s in val.split(','):
+                    s_clean = s.strip()
+                    if s_clean:
+                        chosen_subjects.append(s_clean)
+                        if s_clean not in all_subjects:
+                            all_subjects.append(s_clean)
 
-    # Get marks from InternalMarks model
+    # 3. Get existing marks and ensure those subjects are in the list
     marks_queryset = InternalMarks.objects.filter(stud_id=st)
-    marks_dict = {mark.subject.strip().lower(): mark.marks for mark in marks_queryset}
+    marks_dict = {m.subject.strip(): m.marks for m in marks_queryset}
+    
+    for sub_name in marks_dict.keys():
+        if sub_name not in all_subjects:
+            all_subjects.append(sub_name)
+    
+    # Organize subjects into Categories for a better UI
+    # We'll just pass a list of (subject, mark, is_chosen) tuples
+    subjects_with_marks = []
+    for sub in all_subjects:
+        mark = marks_dict.get(sub, 'Not Uploaded')
+        subjects_with_marks.append({
+            'name': sub,
+            'mark': mark,
+            'is_chosen': sub in chosen_subjects or any(sub in (getattr(SubjectDetail.objects.filter(subject=subj_meta).first(), f, '') or '') for f in ['major1', 'major2', 'major3'] if subj_meta and SubjectDetail.objects.filter(subject=subj_meta).exists())
+        })
 
-    # Pair subjects with marks
-    core_subjects_with_marks = [(subj, marks_dict.get(subj.lower(), 'Not Available')) for subj in core_subjects]
-    elective_subjects_with_marks = [(subj, marks_dict.get(subj.lower(), 'Not Available')) for subj in elective_subjects]
-
+    # For simplicity in current template, just pass'core' and 'elective' lists as before if needed, 
+    # but let's just pass one comprehensive list
     return render(request, 'viewsubject.html', {
         'student': st,
-        'core_subjects_with_marks': core_subjects_with_marks,
-        'elective_subjects_with_marks': elective_subjects_with_marks,
+        'subjects_with_marks': subjects_with_marks,
     })
 
 
@@ -1382,17 +1737,18 @@ def internals_elective(request, student_id, subject_name):
         marks = request.POST.get('marks')
         if not marks.isdigit():
             messages.error(request, "Marks must be numeric.")
-        elif InternalMarks.objects.filter(subject=subject_name, stud_id=student).exists():
-            messages.error(request, 'Marks already exist for this subject.')
         else:
-            InternalMarks.objects.create(
+            obj, created = InternalMarks.objects.update_or_create(
                 subject=subject_name,
                 stud_id=student,
-                marks=int(marks),
-                login_id=teacher
+                defaults={'marks': int(marks), 'login_id': teacher}
             )
-            messages.success(request, 'Marks uploaded successfully!')
-            return redirect('viewsubjectt', id=student.id)
+            if created:
+                messages.success(request, 'Marks uploaded successfully!')
+            else:
+                messages.success(request, 'Marks updated successfully!')
+            # You can change redirect later if needed
+            return redirect('uploadmarks')
 
 
     return render(request, 'uploadmark_teacher.html', {
@@ -1423,17 +1779,18 @@ def internals_major(request, student_id, subject_name):
         marks = request.POST.get('marks')
         if not marks.isdigit():
             messages.error(request, "Marks must be numeric.")
-        elif InternalMarks.objects.filter(subject=subject_name, stud_id=student).exists():
-            messages.error(request, 'Marks already exist for this subject.')
         else:
-            InternalMarks.objects.create(
+            obj, created = InternalMarks.objects.update_or_create(
                 subject=subject_name,
                 stud_id=student,
-                marks=int(marks),
-                login_id=teacher
+                defaults={'marks': int(marks), 'login_id': teacher}
             )
-            messages.success(request, 'Marks uploaded successfully!')
-            return redirect('viewsubjectt', id=student.id)
+            if created:
+                messages.success(request, 'Marks uploaded successfully!')
+            else:
+                messages.success(request, 'Marks updated successfully!')
+            # You can change redirect later if needed
+            return redirect('uploadmarks')
 
     return render(request, 'uploadmark_teacher_major.html', {
         'core': subject_detail,
@@ -1804,3 +2161,107 @@ def evaluate_answers(request, answer_id):
 #         'teacher': teacher,
 #         'essays': essays
 #     })
+
+def stud_mark_select(request):
+    form = uploadmark()
+    return render(request, 'stud_mark_select.html', {'form': form})
+
+def stud_mark_view(request):
+    dept = request.GET.get('department')
+    sem = request.GET.get('semester')
+    stud_id = request.session.get('stud_id')
+    
+    if not stud_id:
+        return redirect('login')
+        
+    student = get_object_or_404(Studentreg, login_id=stud_id)
+    
+    if dept and sem:
+        # Subject discovery logic
+        all_subjects = []
+        subj_meta = Subject.objects.filter(dept=dept, sem=sem).first()
+        
+        ktu_defaults = {
+            '1': ['Mathematics I', 'Engineering Physics', 'Engineering Chemistry', 'Engineering Graphics', 'Engineering Mechanics', 'Basic Civil Engineering', 'Basic Mechanical Engineering', 'Basic Electrical Engineering', 'Basic Electronics Engineering'],
+            '2': ['Mathematics II', 'Physics/Chemistry', 'Graphics/Mechanics', 'Introduction to Computing', 'Professional Ethics'],
+            '3': ['Discrete Mathematics', 'Data Structures', 'Logic System Design', 'Object Oriented Programming'],
+            '4': ['Graph Theory', 'Computer Organization', 'Operating Systems', 'Design & Analysis of Algorithms'],
+            '5': ['Formal Languages', 'Computer Networks', 'Microprocessors', 'Database Management', 'Management of Software Systems'],
+            '6': ['Computer Networks', 'Compiler Design', 'Machine Learning', 'Computer Graphics', 'Disaster Management', 'Industrial Management'],
+            '7': ['AI', 'Cloud Computing', 'Cryptography', 'Distributed Computing', 'Elective 1', 'Elective 2'],
+            '8': ['Data Mining', 'Internet of Things', 'Embedded Systems', 'Elective 3', 'Elective 4']
+        }
+        
+        if dept == 'aids' and sem == '6':
+            ktu_defaults['6'] = ['Computer Networks', 'Compiler Design', 'Machine Learning', 'Computer Graphics', 'Disaster Management', 'Industrial Management', 'Microprocessor Lab', 'Machine Learning Lab']
+        
+        all_subjects.extend(ktu_defaults.get(sem, []))
+        
+        if subj_meta:
+            for model in [Subjectadd, SubjectDetail]:
+                detail_obj = model.objects.filter(subject=subj_meta).first()
+                if detail_obj:
+                    fields = ['major1', 'major2', 'major3', 'minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']
+                    for field in fields:
+                        val = getattr(detail_obj, field, None)
+                        if val:
+                            for s in val.split(','):
+                                s_clean = s.strip()
+                                if s_clean and s_clean not in all_subjects: all_subjects.append(s_clean)
+        
+        # Student specific selection
+        selection = StudentSubjectSelection.objects.filter(student=student).first()
+        if selection:
+            fields = ['minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']
+            for field in fields:
+                val = getattr(selection, field, None)
+                if val:
+                    for s in val.split(','):
+                        s_clean = s.strip()
+                        if s_clean and s_clean not in all_subjects: all_subjects.append(s_clean)
+
+        # Subjects with marks
+        marks_queryset = InternalMarks.objects.filter(stud_id=student)
+        marks_dict = {m.subject.strip(): m.marks for m in marks_queryset}
+        for sub_name in marks_dict.keys():
+            if sub_name not in all_subjects: all_subjects.append(sub_name)
+
+        all_subjects = sorted(list(set(all_subjects)))
+        
+        # Assigned subjects set
+        assigned = set()
+        if selection:
+            if selection.subject:
+                sd = selection.subject
+                for f in ['major1', 'major2', 'major3']:
+                    v = getattr(sd, f, None)
+                    if v:
+                        for s in v.split(','): assigned.add(s.strip())
+            for f in ['minorsone', 'minortwo', 'aeca', 'aecb', 'mdc', 'vac1', 'vac2', 'sec', 'elective1', 'elective2']:
+                v = getattr(selection, f, None)
+                if v:
+                     for s in v.split(','): assigned.add(s.strip())
+
+        marks_ordered = []
+        for sub in all_subjects:
+            marks_ordered.append({
+                'subject': sub,
+                'value': marks_dict.get(sub, ''),
+                'is_assigned': sub in assigned
+            })
+
+        student_data = {
+            'roll_number': student.roll_number or 'N/A',
+            'reg_no': student.admno,
+            'name': student.name,
+            'marks_list': marks_ordered
+        }
+
+        return render(request, 'stud_mark_view.html', {
+            'student_data': student_data,
+            'subject_columns': all_subjects,
+            'dept': dept,
+            'sem': sem
+        })
+        
+    return redirect('stud_mark_select')

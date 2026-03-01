@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>EduVance - My Internal Marks</title>
+
+    <link rel="stylesheet" href="{% static 'mainpage/assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --edu-blue: #0d6efd;
+            --edu-navy: #002147;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Urbanist', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sheet-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            margin: 20px 0;
+            overflow: auto;
+            border: 1px solid #eee;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        th {
+            background: #f4f8ff;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+            padding: 20px 15px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--edu-navy);
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        td {
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 0;
+            vertical-align: middle;
+            background: white;
+        }
+
+        /* Sticky Columns for identification */
+        .sticky-col-1 {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            background: #f8faff !important;
+            min-width: 80px;
+            text-align: center;
+            border-right: 1px solid var(--border-color) !important;
+        }
+
+        .sticky-col-2 {
+            position: sticky;
+            left: 80px;
+            z-index: 10;
+            background: #f8faff !important;
+            min-width: 150px;
+            border-right: 1px solid var(--border-color) !important;
+        }
+
+        .sticky-col-3 {
+            position: sticky;
+            left: 230px;
+            z-index: 10;
+            background: #f8faff !important;
+            min-width: 250px;
+            border-right: 3px solid var(--edu-blue) !important;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-cell {
+            padding: 15px 20px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            color: var(--edu-navy);
+            font-weight: 600;
+        }
+
+        .mark-cell {
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .mark-display {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--edu-blue);
+        }
+
+        .badge-sub {
+            font-size: 10px;
+            background: #e7f0ff;
+            color: var(--edu-blue);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: block;
+            margin-top: 4px;
+            font-weight: 700;
+        }
+
+        .header-2 {
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            padding: 15px 0;
+        }
+
+        .hero-section {
+            background: var(--edu-navy);
+            padding: 100px 0 60px;
+            color: white;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 8px 25px;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-back:hover {
+            background: white;
+            color: var(--edu-navy);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <img src="{% static 'mainpage/assets/img/logotwo.svg'%}" alt="EduVance" height="40">
+            <div class="d-flex gap-4 align-items-center">
+                <a href="{% url 'user' %}" class="text-dark text-decoration-none fw-bold">Dashboard</a>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-sm rounded-pill px-4">Log out</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section text-center">
+        <div class="container">
+            <h2 class="fw-bold mb-2 text-white">My Internal Marksheet</h2>
+            <p class="opacity-75 mb-4">Branch: {{ dept|upper }} | Semester: {{ sem }}</p>
+            <div class="d-inline-flex gap-3">
+                <div class="bg-white bg-opacity-10 rounded-pill px-4 py-2 border border-white border-opacity-25">
+                    <small class="opacity-75">Student:</small> <strong>{{ student_data.name }}</strong>
+                </div>
+                <div class="bg-white bg-opacity-10 rounded-pill px-4 py-2 border border-white border-opacity-25">
+                    <small class="opacity-75">Reg No:</small> <strong>{{ student_data.reg_no }}</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid px-5 py-5">
+        <div class="sheet-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sticky-col-1">Roll</th>
+                        <th class="sticky-col-2">Reg No</th>
+                        <th class="sticky-col-3">Student Name</th>
+                        {% for sub in subject_columns %}
+                        <th>
+                            {{ sub }}
+                            <span class="badge-sub">Internal Mark</span>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="sticky-col-1">
+                            <div class="info-cell justify-content-center text-primary fw-bold">{{
+                                student_data.roll_number }}</div>
+                        </td>
+                        <td class="sticky-col-2">
+                            <div class="info-cell text-muted">{{ student_data.reg_no }}</div>
+                        </td>
+                        <td class="sticky-col-3">
+                            <div class="info-cell fw-bold">{{ student_data.name }}</div>
+                        </td>
+                        {% for mark in student_data.marks_list %}
+                        <td class="mark-cell">
+                            <div class="mark-display">{{ mark.value|default:"-" }}</div>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 p-4 bg-white rounded-3 border border-warning border-opacity-25"
+            style="border-left: 5px solid #ffc107 !important;">
+            <p class="mb-0 text-muted small">
+                <i class="bi bi-info-circle-fill text-warning me-2"></i>
+                <strong>Notice:</strong> These are internal assessment marks uploaded by your department.
+                If you find any discrepancies, please contact your course coordinator or head of department.
+            </p>
+        </div>
+    </div>
+
+</body>
+
+</html>

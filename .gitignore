@@ -151,15 +151,9 @@ cython_debug/
 # VS Code
 .vscode/
 
+
 # Custom project ignores
-extract_handwriting.py
-test_handwriting.png
-create_test_img.py
-users_list.txt
-overhaul_syllabus.py
-reset_db.py
-update_syllabus_ktu.py
-download.png
+# (Removed to allow pushing utilities to Git as requested by user)
 majorp/__pycache__/
 EduVance/__pycache__/
 EduVance/migrations/__pycache__/

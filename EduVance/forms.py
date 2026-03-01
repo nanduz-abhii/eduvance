@@ -1,7 +1,19 @@
 from django import forms
 from .models import *
+import re
+from django.core.exceptions import ValidationError
 
 class studentform(forms.ModelForm):
+    def clean_admno(self):
+        admno = self.cleaned_data.get('admno')
+        # KTU Registration Number pattern: 3 letters + 2 digits + 2 letters + 3 digits
+        # Optional 'L' prefix for lateral entry
+        # Example: MEE23AD025, LMEE21CS001
+        pattern = r'^L?[A-Z]{3}[0-9]{2}[A-Z]{2}[0-9]{3}$'
+        if not re.match(pattern, admno.upper()):
+            raise ValidationError("Invalid KTU Registration Number format (Expected: ABC00XY000)")
+        return admno.upper()
+
     gender_choices = (
         ('male', 'Male'),
         ('female', 'Female'),
@@ -31,9 +43,11 @@ class studentform(forms.ModelForm):
 
     class Meta:
         model = Studentreg
-        fields = ['admno', 'name', 'address', 'gender', 'dob', 'department', 'semester', 'contactno','photo']
+        fields = ['admno', 'roll_number', 'batch', 'name', 'address', 'gender', 'dob', 'department', 'semester', 'contactno','photo']
         widgets = {
             'admno': forms.TextInput(attrs={'class': 'form-control'}),
+            'roll_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Roll Number'}),
+            'batch': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., 2021-2025'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control'}),
             'gender': forms.RadioSelect(),  # Radio buttons
@@ -46,12 +60,13 @@ class studentform(forms.ModelForm):
         }
 
 class loginform(forms.ModelForm):
+    username = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username (Auto-generated)'}))
     class Meta:
         model=Login
-        fields=['username','password']
+        fields=['username','email','password']
         widgets={
-            'username':forms.TextInput(attrs={'class':'form-control'}),
-            'password':forms.PasswordInput(attrs={'class':'form-control'}),
+            'email':forms.EmailInput(attrs={'class':'form-control','placeholder': 'Email Address'}),
+            'password':forms.PasswordInput(attrs={'class':'form-control','placeholder': 'Password'}),
         }
 
 class login_check(forms.Form):
@@ -127,13 +142,14 @@ class omrform(forms.ModelForm):
 class assignment(forms.ModelForm):
     class Meta:
         model=Assignment
-        fields=['assignment','mark']
+        fields=['question', 'assignment']
 
 
 
 class attendance(forms.Form):
     department = forms.ChoiceField(label='Select Department')
     semester = forms.ChoiceField(label='Select Semester')
+    subject = forms.CharField(label='Subject Name', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Computer Networks'}))
 
     def __init__(self, *args, **kwargs):
         super(attendance, self).__init__(*args, **kwargs)
@@ -155,7 +171,28 @@ class attendance(forms.Form):
         self.fields['semester'].choices = semesters
 
 class attendanceview(forms.Form):
-    date=forms.CharField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
+    department = forms.ChoiceField(label='Select Department', widget=forms.Select(attrs={'class': 'form-control'}))
+    semester = forms.ChoiceField(label='Select Semester', widget=forms.Select(attrs={'class': 'form-control'}))
+    subject = forms.CharField(label='Subject Name', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Computer Networks'}))
+    date = forms.CharField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        super(attendanceview, self).__init__(*args, **kwargs)
+        
+        # Engineering Department Choices
+        departments = [
+            ('cse', 'Computer Science Engineering'),
+            ('aids', 'Artificial Intelligence and Data Science'),
+            ('me', 'Mechanical Engineering'),
+            ('ce', 'Civil Engineering'),
+            ('ece', 'Electronics and Communication Engineering'),
+        ]
+        
+        # Engineering Semester Choices (1-8)
+        semesters = [(str(i), f"Semester {i}") for i in range(1, 9)]
+
+        self.fields['department'].choices = departments
+        self.fields['semester'].choices = semesters
 
 
 from django import forms

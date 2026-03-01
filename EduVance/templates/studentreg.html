@@ -3652,8 +3652,12 @@
 									<td> {{form.photo}}</td>
 								</tr>
 								<tr>
-									<td> APAR ID</td>
-									<td> {{form.admno}}</td>
+									<td> REG NO</td>
+									<td> {{form.admno}}
+										{% if form.admno.errors %}
+										<div style="color: red; font-size: 0.8em;">{{ form.admno.errors.0 }}</div>
+										{% endif %}
+									</td>
 								</tr>
 								<tr>
 									<td>FULL NAME</td>
@@ -3788,7 +3792,7 @@
 		</div>
 
 		<div class="copyright text-center wow fadeIn">
-			<p>created by nandana</p>
+			<p>&copy; 2025 EduVance Team</p>
 		</div>
 	</section>
 	<!-- End Footer -->

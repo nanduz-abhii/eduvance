@@ -97,22 +97,21 @@
 					<nav id="main-menu">
 						<ul>
 							<li class="menu-item-has-children">
-								<a href="{% url 'subject_detail_view' %}">Choose Subjects</a>
-								<ul class="sub-menu">
-									<li><a href="{% url 'viewsubject' %}">View Subjects</a></li>
-								</ul>
-							</li>
-							<li class="menu-item-has-children">
 								<a href="{% url 'teachersview' %}">Upload</a>
 								<ul class="sub-menu">
-									<li><a href="{% url 'viewessay' %}">View Essays</a></li>
-									<li><a href="{% url 'viewomr' %}">View OMR</a></li>
-									<li><a href="{% url 'viewanswer' %}">View Answer</a></li>
-									<li><a href="{% url 'viewassignment' %}">View My Submissions</a></li>
-									<li><a href="{% url 'student_assignments' %}">Assignments</a></li>
+									<li><a href="{% url 'teachersview' %}?type=assignment">Upload Essay or
+											Assignments</a></li>
+									<li><a href="{% url 'teachersview' %}?type=omr">Upload OMR Sheet</a></li>
+									<li><a href="{% url 'viewassignment' %}">View My Submission</a></li>
 								</ul>
 							</li>
 							<li><a href="{% url 'studattendance' %}">Attendance</a></li>
+							<li class="menu-item-has-children">
+								<a href="#">Internal Marks</a>
+								<ul class="sub-menu">
+									<li><a href="{% url 'stud_mark_select' %}">View Internal Marks</a></li>
+								</ul>
+							</li>
 							<li class="menu-item-has-children">
 								<a href="{% url 'complaint' %}">Complaint</a>
 								<ul class="sub-menu">
@@ -135,7 +134,7 @@
 														d="M18 16V11C18 7.69 16.07 5.27 13 4.56V4C13 3.45 12.55 3 12 3C11.45 3 11 3.45 11 4V4.56C7.93 5.27 6 7.69 6 11V16L4 18V19H20V18L18 16Z" />
 												</svg>
 											</a>
-											<span>3</span>
+											<span>{{ notification_count }}</span>
 										</div>
 									</div>
 
@@ -155,9 +154,9 @@
 			<div class="cart_drawer">
 				<div class="cart_top">
 					<a href="#" class="cart_close"><i class='bx bx-x'></i></a>
-					<h3 class="title">Notifications</h3>
+					<h3 class="title">University Exam Notifications</h3>
 					<span class="cart_number">
-						3
+						{{ notification_count }}
 					</span>
 				</div>
 
@@ -166,37 +165,22 @@
 					<ul>
 						{% for row in data %}
 						<li class="d-flex">
-
-
 							<div class="product-detail">
 								<h3 class="product_name_mini">
-									<a href="course-details.html">
+									<a href="{% url 'notifications' %}">
 										{{row.remark}}
 									</a>
 								</h3>
 								<div class="product_info">
 									<div class="product_price">
-										<span class="price_sale">{{row.date}}</span>
+										<span class="price_sale">📅 {{row.date}}</span>
 									</div>
 								</div>
 							</div>
-							{% endfor %}
-
-
-							<div class="produc_remove">
-								<a href="#" class="remove-product">
-									<i class='bx bx-trash'></i>
-								</a>
-							</div>
 						</li>
-
-						<div class="produc_remove">
-							<a href="#" class="remove-product">
-								<i class='bx bx-trash'></i>
-							</a>
-						</div>
-						</li>
-
+						{% empty %}
+						<li>No notifications.</li>
+						{% endfor %}
 					</ul>
 				</div>
 
@@ -216,6 +200,58 @@
 		<!-- End Drawer -->
 	</header>
 	<!-- End Header -->
+
+	<!-- Upcoming Exam Popup (slides from right side) -->
+	{% if upcoming_alert %}
+	<div id="exam-popup" style="
+		position: fixed;
+		top: 80px;
+		right: 0;
+		background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+		color: white;
+		border-radius: 12px 0 0 12px;
+		padding: 16px 20px;
+		z-index: 9999;
+		max-width: 340px;
+		box-shadow: -4px 4px 20px rgba(0,0,0,0.3);
+		animation: slideInRight 0.5s ease forwards;
+		font-family: 'Urbanist', sans-serif;
+	">
+		<style>
+			@keyframes slideInRight {
+				from {
+					transform: translateX(100%);
+				}
+
+				to {
+					transform: translateX(0);
+				}
+			}
+		</style>
+		<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+			<div>
+				<p style="margin:0 0 4px 0; font-weight:700; font-size:15px;">🔔 Upcoming University Exam!</p>
+				{% for alert in upcoming_alert %}
+				<p style="margin:4px 0; font-size:13px;"><strong>{{ alert.remark }}</strong> — 📅 {{ alert.date }}</p>
+				{% endfor %}
+				<p style="margin:6px 0 0 0; font-size:12px; opacity:0.85;">⚠️ This exam is happening within 2 days!</p>
+			</div>
+			<button onclick="document.getElementById('exam-popup').style.display='none'" style="
+				background: rgba(255,255,255,0.25);
+				border: none;
+				color: white;
+				border-radius: 50%;
+				width: 26px;
+				height: 26px;
+				cursor: pointer;
+				margin-left: 12px;
+				font-size: 14px;
+				line-height: 1;
+			" title="Close">✕</button>
+		</div>
+	</div>
+	{% endif %}
+
 	{% if messages %}
 	{% for a in messages %}
 	{{ a }}
@@ -342,19 +378,22 @@
 				</div><!-- End Col -->
 
 				<div class="col-xl-3 col-lg-4 col-md-6 col-12 wow fadeIn">
-					<div class="feature-item">
-						<div class="fea-icon">
-							<svg fill="none" viewBox="0 0 38 31">
-								<path fill="#0D5FF9"
-									d="M2.828.102C1.495.417.368 1.55.088 2.857c-.117.538-.117 24.742 0 25.28.288 1.342 1.473 2.497 2.85 2.777.553.115 31.291.115 31.843 0 1.377-.28 2.563-1.435 2.85-2.776.118-.539.118-24.743 0-25.281C37.344 1.515 36.158.36 34.781.08c-.265-.057-2.356-.079-6.613-.079h-6.23l-.25.244c-.324.316-.332.596-.037.919l.213.236 6.363.036c6.267.036 6.363.036 6.694.187.486.222.84.56 1.075 1.018l.207.41.022 8.945.014 8.953H1.48l.015-8.953.022-8.946.206-.409a2.19 2.19 0 011.075-1.018c.332-.151.428-.151 6.672-.187 3.484-.021 6.393-.064 6.466-.1.155-.072.346-.41.346-.617 0-.237-.191-.538-.405-.632-.28-.129-12.512-.107-13.05.015zM36.225 25.16l-.022 2.784-.207.409a2.19 2.19 0 01-1.075 1.018l-.338.151H3.137l-.42-.2a2.185 2.185 0 01-1.045-1.048c-.148-.316-.155-.46-.177-3.114l-.022-2.776h34.774l-.022 2.776z" />
-								<path fill="#0D5FF9"
-									d="M6.657 23.948c-1.524.531-1.98 2.296-.898 3.487.125.143.412.344.64.452.546.258 1.34.28 1.864.043.994-.438 1.517-1.543 1.215-2.547-.346-1.162-1.664-1.837-2.82-1.435zm1.2 1.55c.185.172.251.308.251.473 0 .294-.412.718-.692.718-.773 0-1.068-.976-.405-1.335.31-.165.574-.122.847.144zM13.123 25.354c-.493.265-.478 1.026.03 1.248.147.065 2.438.086 9.507.086 7.917 0 9.345-.014 9.522-.1.486-.251.486-.983 0-1.234-.294-.144-18.786-.15-19.059 0zM18.374.245c-.339.33-.339.617 0 .947.265.259.493.302.817.158.509-.222.523-.997.03-1.248-.332-.165-.575-.122-.847.143zM16.518 7.096c-.515.173-.869.467-1.149.94l-.228.395-.022 2.597c-.015 1.614.007 2.704.051 2.87.2.717.84 1.298 1.606 1.463.663.143 1.023.029 2.474-.782.7-.395 1.665-.94 2.15-1.205 1.356-.76 1.731-1.234 1.731-2.181 0-.961-.375-1.42-1.804-2.217-.53-.294-1.473-.825-2.099-1.184-1.554-.875-1.915-.968-2.71-.696zm2.813 2.418c1.097.61 2.07 1.184 2.165 1.27.11.1.162.23.162.409 0 .18-.051.308-.162.409-.272.244-4.146 2.389-4.315 2.389-.081 0-.25-.086-.376-.187l-.228-.186v-4.85l.228-.187c.125-.1.295-.186.376-.186.088 0 1.053.502 2.15 1.12z" />
-							</svg>
+					<a href="{% url 'stud_mark_select' %}"
+						style="text-decoration: none; color: inherit; display: block;">
+						<div class="feature-item">
+							<div class="fea-icon">
+								<svg fill="none" viewBox="0 0 38 31">
+									<path fill="#0D5FF9"
+										d="M2.828.102C1.495.417.368 1.55.088 2.857c-.117.538-.117 24.742 0 25.28.288 1.342 1.473 2.497 2.85 2.777.553.115 31.291.115 31.843 0 1.377-.28 2.563-1.435 2.85-2.776.118-.539.118-24.743 0-25.281C37.344 1.515 36.158.36 34.781.08c-.265-.057-2.356-.079-6.613-.079h-6.23l-.25.244c-.324.316-.332.596-.037.919l.213.236 6.363.036c6.267.036 6.363.036 6.694.187.486.222.84.56 1.075 1.018l.207.41.022 8.945.014 8.953H1.48l.015-8.953.022-8.946.206-.409a2.19 2.19 0 011.075-1.018c.332-.151.428-.151 6.672-.187 3.484-.021 6.393-.064 6.466-.1.155-.072.346-.41.346-.617 0-.237-.191-.538-.405-.632-.28-.129-12.512-.107-13.05.015zM36.225 25.16l-.022 2.784-.207.409a2.19 2.19 0 01-1.075 1.018l-.338.151H3.137l-.42-.2a2.185 2.185 0 01-1.045-1.048c-.148-.316-.155-.46-.177-3.114l-.022-2.776h34.774l-.022 2.776z" />
+									<path fill="#0D5FF9"
+										d="M6.657 23.948c-1.524.531-1.98 2.296-.898 3.487.125.143.412.344.64.452.546.258 1.34.28 1.864.043.994-.438 1.517-1.543 1.215-2.547-.346-1.162-1.664-1.837-2.82-1.435zm1.2 1.55c.185.172.251.308.251.473 0 .294-.412.718-.692.718-.773 0-1.068-.976-.405-1.335.31-.165.574-.122.847.144zM13.123 25.354c-.493.265-.478 1.026.03 1.248.147.065 2.438.086 9.507.086 7.917 0 9.345-.014 9.522-.1.486-.251.486-.983 0-1.234-.294-.144-18.786-.15-19.059 0zM18.374.245c-.339.33-.339.617 0 .947.265.259.493.302.817.158.509-.222.523-.997.03-1.248-.332-.165-.575-.122-.847.143zM16.518 7.096c-.515.173-.869.467-1.149.94l-.228.395-.022 2.597c-.015 1.614.007 2.704.051 2.87.2.717.84 1.298 1.606 1.463.663.143 1.023.029 2.474-.782.7-.395 1.665-.94 2.15-1.205 1.356-.76 1.731-1.234 1.731-2.181 0-.961-.375-1.42-1.804-2.217-.53-.294-1.473-.825-2.099-1.184-1.554-.875-1.915-.968-2.71-.696zm2.813 2.418c1.097.61 2.07 1.184 2.165 1.27.11.1.162.23.162.409 0 .18-.051.308-.162.409-.272.244-4.146 2.389-4.315 2.389-.081 0-.25-.086-.376-.187l-.228-.186v-4.85l.228-.187c.125-.1.295-.186.376-.186.088 0 1.053.502 2.15 1.12z" />
+								</svg>
+							</div>
+							<h3>Internal Marks</h3>
+							<p>Click here to view your latest assessment scores and track your performance.</p>
+							<span class="fnumber">02</span>
 						</div>
-						<h3>Internal Marks</h3>
-						<p>Get to know your internal marks quicker</p>
-						<span class="fnumber">02</span>
-					</div>
+					</a>
 				</div><!-- End Col -->
 
 				<div class="col-xl-3 col-lg-4 col-md-6 col-12 wow fadeIn">
@@ -717,7 +756,7 @@
 		</div>
 
 		<div class="copyright text-center wow fadeIn">
-			<p>created by nandana</p>
+			<p>&copy; 2025 EduVance Team</p>
 		</div>
 	</section>
 	<!-- End Footer -->

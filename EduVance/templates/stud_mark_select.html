@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- SITE TITLE -->
+    <title>EduVance - View Internal Marks</title>
+    <!-- Latest Bootstrap min CSS -->
+    <link rel="stylesheet" href="{% static 'mainpage/assets/bootstrap/css/bootstrap.min.css' %}">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <!-- Icon CSS -->
+    <link rel="stylesheet" href="{% static 'mainpage/assets/fonts/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/line-awesome.css' %}">
+    <!--Preloader Css-->
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/preloader.css' %}">
+    <!--Style CSS -->
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/style.css' %}">
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/responsive.css' %}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+    <!-- Start Header -->
+    <header id="navigation" class="header-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-6 align-self-center">
+                    <div class="site-logo">
+                        <img src="{% static 'mainpage/assets/img/logotwo.svg'%}" alt="EduVance">
+                    </div>
+                </div>
+
+                <div class="col-xl-9 col-lg-8 col-md-6 menu_col justify-content-start d-flex align-self-center">
+                    <nav id="main-menu" class="d-flex align-items-center">
+                        <ul class="d-flex align-items-center list-unstyled mb-0 gap-4">
+                            <li><a href="{% url 'user' %}" class="text-dark text-decoration-none fw-bold">Dashboard</a>
+                            </li>
+                            <li><a href="{% url 'login' %}"
+                                    class="btn btn-primary btn-sm text-white px-4 rounded-pill">Log out</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Start Breadcrumb -->
+    <section class="section-padding" style="background: #002147; padding: 120px 0 60px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="section-title">
+                        <h2 class="text-white">View Internal Marks</h2>
+                        <p class="text-white-50">Select your branch and semester to view the uploaded marksheet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Start Form Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="contact-form-wrapper"
+                        style="background: #fff; padding: 50px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);">
+
+                        <form method="GET" action="{% url 'stud_mark_view' %}" class="row">
+                            <div class="col-12 mb-4">
+                                <label class="form-label fw-bold text-dark mb-2">Select Branch</label>
+                                <div style="position: relative;">
+                                    <span
+                                        style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #0d6efd;"><i
+                                            class="bi bi-building"></i></span>
+                                    {{ form.department }}
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label class="form-label fw-bold text-dark mb-2">Select Semester</label>
+                                <div style="position: relative;">
+                                    <span
+                                        style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #0d6efd;"><i
+                                            class="bi bi-mortarboard"></i></span>
+                                    {{ form.semester }}
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <button type="submit"
+                                    class="btn btn-primary w-100 py-3 fw-bold rounded-pill text-uppercase"
+                                    style="letter-spacing: 1px;">
+                                    Generate Marksheet <i class="bi bi-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        select {
+            width: 100% !important;
+            height: 60px !important;
+            background: #f4f8ff !important;
+            border: 1px solid #e1e9f5 !important;
+            padding-left: 45px !important;
+            border-radius: 10px !important;
+            color: #002147 !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #0d6efd !important;
+            box-shadow: 0 0 15px rgba(13, 110, 253, 0.1);
+        }
+    </style>
+
+    <script src="{% static 'mainpage/assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'mainpage/assets/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'mainpage/assets/js/scripts.js' %}"></script>
+
+</body>
+
+</html>

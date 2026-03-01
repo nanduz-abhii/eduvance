@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Daily Attendance - EduVance</title>
+    <link rel="stylesheet" href="{% static 'mainpage/assets/bootstrap/css/bootstrap.min.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'mainpage/assets/css/style.css' %}">
+    <style>
+        .attendance-container {
+            margin-top: 50px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .table thead {
+            background-color: #0b466e;
+            color: white;
+        }
+
+        .status-present {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-absent {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #0b466e 0%, #0d5ff9 100%);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 0 0 50px 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="navigation" class="header-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-6 align-self-center">
+                    <div class="site-logo">
+                        <a href="{% url 'main' %}">
+                            <h2 style="color: #0d5ff9; margin: 0;">EduVance</h2>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-lg-9 col-md-6 menu_col justify-content-end d-flex align-self-center">
+                    <nav id="main-menu">
+                        <ul>
+                            <li><a href="{% url 'user' %}">Home</a></li>
+                            <li><a href="{% url 'sprofile' %}">Profile</a></li>
+                            <li><a href="{% url 'login' %}">Log Out</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header text-center">
+        <div class="container">
+            <h1>Your Daily Attendance Log</h1>
+            <p>Track your attendance for each subject day by day</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="attendance-container">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ record.current_date }}</td>
+                            <td>{{ record.subject }}</td>
+                            <td>{{ record.t_id.tname }}</td>
+                            <td>
+                                {% if record.present == 1 %}
+                                <span class="status-present">Present</span>
+                                {% else %}
+                                <span class="status-absent">Absent</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No attendance records found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer fstyle-2 mt-5">
+        <div class="container text-center p-4">
+            <p>&copy; 2025 EduVance Team. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

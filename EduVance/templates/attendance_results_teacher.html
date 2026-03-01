@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Attendance Results - Teacher Portal</title>
+
+    <link rel="stylesheet" href="{% static 'mainpage/assets/bootstrap/css/bootstrap.min.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-brand img {
+            height: 40px;
+        }
+
+        .nav-link {
+            color: #cbd5e1 !important;
+            margin: 0 10px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary) !important;
+        }
+
+        .results-summary {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-title {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table {
+            color: #f8fafc;
+            margin-bottom: 0;
+        }
+
+        .table thead {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .table th {
+            color: var(--primary);
+            padding: 15px;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-pill {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-present {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .status-absent {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .student-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'tuser' %}">
+                <img src="{% static 'mainpage/assets/img/logotwo.svg' %}" alt="EduVance">
+            </a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tuser' %}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'attendanceviewt' %}">New Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="results-summary">
+            <h2 class="summary-title">{{ subject }}</h2>
+            <p class="text-muted mb-0">
+                {{ dept|upper }} | Semester {{ sem }} | Date: {{ date }}
+            </p>
+        </div>
+
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="80">Photo</th>
+                        <th>Adm No</th>
+                        <th>Student Name</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in results %}
+                    <tr>
+                        <td>
+                            {% if a.login_id.photo %}
+                            <img src="{{ a.login_id.photo.url }}" class="student-img">
+                            {% else %}
+                            <div class="student-img d-flex align-items-center justify-content-center bg-secondary">
+                                {{ a.login_id.name.0 }}
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td><code>{{ a.login_id.admno }}</code></td>
+                        <td><strong>{{ a.login_id.name }}</strong></td>
+                        <td class="text-center">
+                            {% if a.present %}
+                            <span class="status-pill status-present">PRESENT</span>
+                            {% else %}
+                            <span class="status-pill status-absent">ABSENT</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">No records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{% static 'mainpage/assets/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+
+</html>

@@ -11,11 +11,14 @@ class Studentreg(models.Model):
     dob=models.DateField(max_length=20)
     department=models.CharField(max_length=40)
     semester=models.IntegerField()
+    batch=models.CharField(max_length=20, null=True, blank=True)
+    roll_number=models.CharField(max_length=20, null=True, blank=True)
     contactno=models.CharField(max_length=10)
     login_id=models.OneToOneField('Login', on_delete=models.CASCADE,related_name = 'student_as_loginid')
 
 class Login(models.Model):
     username=models.CharField(max_length=150)
+    email=models.EmailField(max_length=254, null=True, blank=True)
     password=models.CharField(max_length=50)
     usertype=models.IntegerField(default=0,null=True)
     status=models.IntegerField(default=0)
@@ -99,6 +102,7 @@ class Attendance(models.Model):
     current_date=models.DateField(auto_now_add=True)
     present=models.IntegerField(default=0)
     absent=models.IntegerField(default=0)
+    subject=models.CharField(max_length=200, null=True, blank=True)
 
 class SubjectView(models.Model):
     stud_id = models.ForeignKey('Studentreg', on_delete=models.CASCADE)
@@ -144,7 +148,7 @@ class InternalMarks(models.Model):
     login_id = models.ForeignKey('teacherreg', on_delete=models.CASCADE)  # Teacher who entered the marks
 
     def __str__(self):
-        return f"{self.stud_id} - {self.subject} - {self.subjects}- Marks: {self.marks}"
+        return f"{self.stud_id} - {self.subject} - Marks: {self.marks}"
 
 class complaints(models.Model):
      current_date = models.DateTimeField(auto_now_add=True)
@@ -202,7 +206,7 @@ class StudentSubjectSelection(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.name} - {self.subject.dept} Sem {self.subject.sem} Selection"
+        return f"{self.student.name} - Selection"
     
 class Subjectadd(models.Model):
     hod = models.ForeignKey('teacherreg', on_delete=models.CASCADE)  # Add this line
