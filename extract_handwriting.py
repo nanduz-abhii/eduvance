@@ -5,7 +5,7 @@ from PIL import Image
 import fitz  # PyMuPDF
 
 # Replace with your actual Gemini API Key if not set in environment
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyANUm5NhkC12yWPW3fR5Kf5NO4vC26ZVCw")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 def extract_text_from_pdf(pdf_path):

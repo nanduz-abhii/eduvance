@@ -22,8 +22,8 @@ import threading
 import time
 
 NVIDIA_API_KEY = "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"
-# Configure Gemini API Key (Ideally this should be in .env, but hardcoding for now as per instructions/assumptions)
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyANUm5NhkC12yWPW3fR5Kf5NO4vC26ZVCw") # User provided key
+# Configure Gemini API Key
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 client = genai.Client(api_key=GEMINI_API_KEY)
 NVIDIA_API_KEY = "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"
 CHOICES = ['A', 'B', 'C', 'D']
