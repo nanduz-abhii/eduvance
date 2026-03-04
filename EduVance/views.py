@@ -393,21 +393,24 @@ def uploadassignment(request,id):
     tc_id = question_obj.teacher
     
     if request.method=='POST':
-        form=assignment(request.POST,request.FILES)
-        if form.is_valid():
-            a=form.save(commit=False)
-            a.login_id=student_obj
-            a.ta_id=tc_id
-            a.question = question_obj
-            
+        uploaded_file = request.FILES.get('assignment')
+        if uploaded_file:
+            a = Assignment(
+                assignment=uploaded_file,
+                login_id=student_obj,
+                ta_id=tc_id,
+                question=question_obj
+            )
             # Extract and Rate
-            transcription = extract_handwriting_with_gemini(request.FILES['assignment'])
+            transcription = extract_handwriting_with_gemini(uploaded_file)
             a.transcription = transcription
             a.rating = rate_assignment_with_ai(transcription, question_obj.question_text)
             
             a.save()
             messages.success(request, f"Assignment '{question_obj.title}' uploaded and rated successfully!")
             return redirect('viewassignment')
+        else:
+            messages.error(request, "Please attach a file.")
     else:
         form=assignment()
     return render(request, 'uploadassignment.html',{'form':form, 'question': question_obj})
