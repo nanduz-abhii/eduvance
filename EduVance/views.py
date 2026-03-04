@@ -20,11 +20,8 @@ from PIL import Image
 from google import genai
 import threading
 import time
-
-NVIDIA_API_KEY = "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"
 # Configure Gemini API Key
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-client = genai.Client(api_key=GEMINI_API_KEY)
 NVIDIA_API_KEY = "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"
 CHOICES = ['A', 'B', 'C', 'D']
 
@@ -477,6 +474,7 @@ def rate_assignment_with_ai(transcription, question_text):
     Feedback: [Feedback]
     """
     try:
+        client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
         response = client.models.generate_content(
             model='gemini-flash-latest',
             contents=[prompt]
@@ -1545,6 +1543,7 @@ def extract_text_from_pdf(pdf_file):
 def extract_handwriting_with_gemini(media_file):
     """Extracts handwritten text from an image or PDF using Google Gemini Vision."""
     try:
+        client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
         # Read the file content
         file_content = media_file.read()
         media_file.seek(0) # Reset pointer
