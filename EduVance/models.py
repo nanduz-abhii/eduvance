@@ -91,7 +91,7 @@ class Assignment(models.Model):
     assignment=models.FileField(upload_to='uploads/', storage=RawMediaCloudinaryStorage())
     question = models.ForeignKey(AssignmentQuestion, on_delete=models.CASCADE, null=True)
     transcription = models.TextField(null=True, blank=True)
-    rating = models.CharField(max_length=100, null=True, blank=True)
+    rating = models.CharField(max_length=500, null=True, blank=True)
     current_date=models.DateTimeField(auto_now_add=True)
     login_id=models.ForeignKey('Studentreg', on_delete=models.CASCADE)
     ta_id=models.ForeignKey('teacherreg', on_delete=models.CASCADE)
