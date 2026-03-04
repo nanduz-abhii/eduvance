@@ -498,6 +498,36 @@ def removeassignment(request, id):
     a.delete()
     return redirect('viewassignment')
 
+def retry_ai_grade(request, id):
+    import io
+    import requests
+    
+    assignment = get_object_or_404(Assignment, id=id)
+    if not assignment.assignment:
+        messages.error(request, "No file attached to this submission.")
+        return redirect('viewassignmentt')
+        
+    try:
+        # Fetch the file fully into memory
+        response = requests.get(assignment.assignment.url)
+        response.raise_for_status()
+        
+        file_bytes = io.BytesIO(response.content)
+        file_bytes.name = assignment.assignment.name.split('/')[-1] if assignment.assignment.name else "submission.pdf"
+        
+        transcription = extract_handwriting_with_gemini(file_bytes)
+        rating = rate_assignment_with_ai(transcription, assignment.question.question_text)
+        
+        assignment.transcription = transcription
+        assignment.rating = rating
+        assignment.save()
+        messages.success(request, f"AI grading retried successfully for {assignment.login_id.name}.")
+        
+    except Exception as e:
+        messages.error(request, f"Failed to retry AI processing: {str(e)}")
+        
+    return redirect('viewassignmentt')
+
 def viewassignmentt(request):
     return redirect('add_assignment')
 

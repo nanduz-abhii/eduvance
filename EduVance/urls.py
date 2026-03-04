@@ -88,6 +88,7 @@ urlpatterns=[
     # urls.py
     path('upload_assignment_mark/<int:id>/upload-mark/', views.upload_assignment_mark, name='upload_assignment_mark'),
     path('add_assignment', views.add_assignment_view, name='add_assignment'),
+    path('retry_ai_grade/<int:id>/', views.retry_ai_grade, name='retry_ai_grade'),
     path('student_assignments', views.student_assignments_view, name='student_assignments'),
     path('stud_mark_select', views.stud_mark_select, name='stud_mark_select'),
     path('stud_mark_view', views.stud_mark_view, name='stud_mark_view'),
