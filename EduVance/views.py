@@ -465,13 +465,16 @@ def student_assignments_view(request):
 
 def rate_assignment_with_ai(transcription, question_text):
     prompt = f"""
-    Evaluate the following student's handwritten transcription against the assignment question.
-    Provide a rating (Excellent, Good, Average, or Poor) and a short one-sentence feedback.
+    Evaluate the following student's handwritten transcription against the assignment question for relevance and correctness.
+    Provide an AI Score out of 10, a rating (Excellent, Good, Average, or Poor), and a short one-sentence feedback.
     
     Assignment Question: {question_text}
     Student Submission: {transcription}
     
-    Format: [Rating] : [Feedback]
+    Format:
+    AI Score: [X]/10
+    Rating: [Rating]
+    Feedback: [Feedback]
     """
     try:
         response = client.models.generate_content(
