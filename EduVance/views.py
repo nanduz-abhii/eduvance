@@ -407,7 +407,7 @@ def uploadassignment(request,id):
             
             a.save()
             messages.success(request, f"Assignment '{question_obj.title}' uploaded and rated successfully!")
-            return redirect('user')
+            return redirect('viewassignment')
     else:
         form=assignment()
     return render(request, 'uploadassignment.html',{'form':form, 'question': question_obj})
@@ -487,11 +487,10 @@ def viewassignment(request):
 
     return render(request,'viewassignment.html',{'submissions':submissions})
 
-def removeassignment(request):
-    stud_id=request.session.get('stud_id')
-    login_details=get_object_or_404(Login,id=stud_id)
-    view_id=Assignment.objects.filter(login_id=login_details)
-    return render(request,'viewassignment.html',{'data':view_id})
+def removeassignment(request, id):
+    a=get_object_or_404(Assignment, id=id)
+    a.delete()
+    return redirect('viewassignment')
 
 def viewassignmentt(request):
     return redirect('add_assignment')
