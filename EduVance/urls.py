@@ -87,6 +87,7 @@ urlpatterns=[
     path('save_essay_marks/<int:essay_id>/', views.save_essay_marks, name='save_essay_marks'),
     # urls.py
     path('upload_assignment_mark/<int:id>/upload-mark/', views.upload_assignment_mark, name='upload_assignment_mark'),
+    path('poll_assignment_status/<int:id>/', views.poll_assignment_status, name='poll_assignment_status'),
     path('add_assignment', views.add_assignment_view, name='add_assignment'),
     path('retry_ai_grade/<int:id>/', views.retry_ai_grade, name='retry_ai_grade'),
     path('student_assignments', views.student_assignments_view, name='student_assignments'),

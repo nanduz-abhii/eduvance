@@ -62,7 +62,7 @@
                             <p class="text-muted small">{{ submission.question.question_text }}</p>
 
                             <h6 class="fw-bold mb-2 mt-4">Extracted Text:</h6>
-                            <div
+                            <div id="transcription-{{ submission.id }}"
                                 style="background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 0.9rem; max-height: 200px; overflow-y: auto;">
                                 {{ submission.transcription }}
                             </div>
@@ -71,7 +71,9 @@
                             <h6 class="fw-bold mb-2" style="color: #198754;">AI Feedback & Rating:</h6>
                             <div
                                 style="background: #e9f7ef; padding: 20px; border-radius: 8px; border-left: 4px solid #198754;">
-                                <div style="white-space: pre-wrap; font-size: 0.95rem;">{{ submission.rating }}</div>
+                                <div id="rating-{{ submission.id }}" style="white-space: pre-wrap; font-size: 0.95rem;"
+                                    data-status="{% if submission.rating == 'Pending...' %}pending{% else %}done{% endif %}">
+                                    {{ submission.rating }}</div>
                             </div>
 
                             <h6 class="fw-bold mb-2 mt-4" style="color: #0d6efd;">Teacher's Grade:</h6>
@@ -113,6 +115,39 @@
         <p>&copy; 2026 EduVance Team</p>
     </footer>
     <script src="{% static 'mainpage/assets/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function checkPendingAssignments() {
+                const pendingElements = document.querySelectorAll('div[data-status="pending"]');
+                if (pendingElements.length === 0) return; // Stop polling if nothing is pending
+                
+                pendingElements.forEach(el => {
+                    const subId = el.id.split('-')[1];
+                    fetch(`/poll_assignment_status/${subId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success' && data.rating !== 'Pending...') {
+                                el.innerText = data.rating;
+                                el.setAttribute('data-status', 'done');
+                                
+                                const transEl = document.getElementById(`transcription-${subId}`);
+                                if (transEl) transEl.innerText = data.transcription;
+                                
+                                // Show a notification prompt or just let UI naturally update
+                                console.log(`Assignment ${subId} processed by AI.`);
+                            }
+                        })
+                        .catch(err => console.error("Error polling assignment:", err));
+                });
+                
+                // Keep polling every 5 seconds if there are still pending elements
+                setTimeout(checkPendingAssignments, 5000);
+            }
+            
+            // Initial call
+            setTimeout(checkPendingAssignments, 2000);
+        });
+    </script>
 </body>
 
 </html>

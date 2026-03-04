@@ -398,13 +398,45 @@ def uploadassignment(request,id):
                 ta_id=tc_id,
                 question=question_obj
             )
-            # Extract and Rate
-            transcription = extract_handwriting_with_gemini(uploaded_file)
-            a.transcription = transcription
-            a.rating = rate_assignment_with_ai(transcription, question_obj.question_text)
-            
+            a.transcription = "Processing in background..."
+            a.rating = "Pending..."
             a.save()
-            messages.success(request, f"Assignment '{question_obj.title}' uploaded and rated successfully!")
+            
+            # Start background thread for processing
+            def process_in_background(assignment_id):
+                import io, requests
+                try:
+                    # Let the database commit and Cloudinary finish its initial sync
+                    time.sleep(2)
+                    from .models import Assignment
+                    assign_obj = Assignment.objects.get(id=assignment_id)
+                    res = requests.get(assign_obj.assignment.url)
+                    res.raise_for_status()
+                    
+                    file_bytes = io.BytesIO(res.content)
+                    file_bytes.name = assign_obj.assignment.name.split('/')[-1] if assign_obj.assignment.name else "submission.pdf"
+                    
+                    transcription = extract_handwriting_with_gemini(file_bytes)
+                    rating = rate_assignment_with_ai(transcription, assign_obj.question.question_text)
+                    
+                    assign_obj.transcription = transcription
+                    assign_obj.rating = rating
+                    assign_obj.save()
+                except Exception as e:
+                    try:
+                        from .models import Assignment
+                        assign_obj = Assignment.objects.get(id=assignment_id)
+                        assign_obj.transcription = "Failed to process."
+                        assign_obj.rating = f"Error: {str(e)}"
+                        assign_obj.save()
+                    except:
+                        pass
+            
+            thread = threading.Thread(target=process_in_background, args=(a.id,))
+            thread.daemon = True
+            thread.start()
+            
+            messages.success(request, f"Assignment '{question_obj.title}' uploaded successfully. Waiting for AI review...")
             return redirect('viewassignment')
         else:
             messages.error(request, "Please attach a file.")
@@ -490,6 +522,17 @@ def viewassignment(request):
     submissions = Assignment.objects.filter(login_id=student_obj).select_related('question')
 
     return render(request,'viewassignment.html',{'submissions':submissions})
+
+def poll_assignment_status(request, id):
+    try:
+        assignment = Assignment.objects.get(id=id)
+        return JsonResponse({
+            'status': 'success',
+            'rating': assignment.rating,
+            'transcription': assignment.transcription
+        })
+    except Assignment.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Assignment not found.'})
 
 def removeassignment(request, id):
     a=get_object_or_404(Assignment, id=id)

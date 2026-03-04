@@ -551,12 +551,13 @@
                                         <summary
                                             style="cursor: pointer; color: #4facfe; font-weight: bold; font-size: 0.85rem;">
                                             View Extracted Text</summary>
-                                        <div
+                                        <div id="transcription-{{ sub.id }}"
                                             style="background: #f9f9f9; padding: 10px; border-radius: 6px; font-size: 0.8rem; max-height: 150px; overflow-y: auto; margin-top: 5px; white-space: pre-wrap; color: #333;">
                                             {{ sub.transcription|default:"No transcription available." }}</div>
                                     </details>
-                                    <div class="rating-cell"
-                                        style="margin-bottom: 8px; font-size: 0.85rem; padding: 6px; background: #eef2fa; border-radius: 4px;">
+                                    <div id="rating-{{ sub.id }}" class="rating-cell"
+                                        style="margin-bottom: 8px; font-size: 0.85rem; padding: 6px; background: #eef2fa; border-radius: 4px;"
+                                        data-status="{% if sub.rating == 'Pending...' %}pending{% else %}done{% endif %}">
                                         {{ sub.rating|default:"–" }}</div>
                                     <a href="{% url 'retry_ai_grade' sub.id %}"
                                         onclick="return confirm('Retrying AI Processing will extract and grade the file again. This might take several seconds. Continue?');"
@@ -718,6 +719,34 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function checkPendingAssignments() {
+                const pendingElements = document.querySelectorAll('div[data-status="pending"]');
+                if (pendingElements.length === 0) return;
+
+                pendingElements.forEach(el => {
+                    const subId = el.id.split('-')[1];
+                    fetch(`/poll_assignment_status/${subId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success' && data.rating !== 'Pending...') {
+                                el.innerText = data.rating;
+                                el.setAttribute('data-status', 'done');
+
+                                const transEl = document.getElementById(`transcription-${subId}`);
+                                if (transEl) transEl.innerText = data.transcription;
+                            }
+                        })
+                        .catch(err => console.error("Error polling assignment:", err));
+                });
+
+                setTimeout(checkPendingAssignments, 5000);
+            }
+
+            setTimeout(checkPendingAssignments, 2000);
+        });
+    </script>
 </body>
 
 </html>
