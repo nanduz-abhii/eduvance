@@ -17,8 +17,8 @@ class Studentreg(models.Model):
     login_id=models.OneToOneField('Login', on_delete=models.CASCADE,related_name = 'student_as_loginid')
 
 class Login(models.Model):
-    username=models.CharField(max_length=150)
-    email=models.EmailField(max_length=254, null=True, blank=True)
+    username = models.CharField(max_length=150)
+    email = models.CharField(max_length=254, null=True, blank=True)
     password=models.CharField(max_length=50)
     usertype=models.IntegerField(default=0,null=True)
     status=models.IntegerField(default=0)
@@ -28,17 +28,17 @@ import uuid
 
 class teacherreg(models.Model):
     teacherid = models.CharField(max_length=40, unique=True, editable=False)
-    tphoto = models.FileField(upload_to='uploads/')
-    tname = models.CharField(max_length=50)
-    tgender = models.CharField(max_length=10)
-    age = models.CharField(max_length=20)
-    tdepartment = models.CharField(max_length=40)
-    tqualification = models.CharField(max_length=40)
-    treferenceletter = models.FileField(upload_to='uploads/')
-    tcertificate = models.FileField(upload_to='uploads/')
-    texp = models.CharField(max_length=40)
-    tcontactno = models.CharField(max_length=10)
-    is_hod = models.BooleanField(default=False)  # ✅ Add this line
+    tphoto = models.FileField(upload_to='uploads/', null=True, blank=True)
+    tname = models.CharField(max_length=50, null=True, blank=True)
+    tgender = models.CharField(max_length=10, null=True, blank=True)
+    age = models.CharField(max_length=20, null=True, blank=True)
+    tdepartment = models.CharField(max_length=40, null=True, blank=True)
+    tqualification = models.CharField(max_length=40, null=True, blank=True)
+    treferenceletter = models.FileField(upload_to='uploads/', null=True, blank=True)
+    tcertificate = models.FileField(upload_to='uploads/', null=True, blank=True)
+    texp = models.CharField(max_length=40, null=True, blank=True)
+    tcontactno = models.CharField(max_length=10, null=True, blank=True)
+    is_hod = models.BooleanField(default=False)
     login_id = models.OneToOneField('Login', on_delete=models.CASCADE, related_name='t')
 
     def save(self, *args, **kwargs):

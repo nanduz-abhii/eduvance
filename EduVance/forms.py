@@ -62,12 +62,16 @@ class studentform(forms.ModelForm):
 class loginform(forms.ModelForm):
     username = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username (Auto-generated)'}))
     class Meta:
-        model=Login
-        fields=['username','email','password']
-        widgets={
-            'email':forms.EmailInput(attrs={'class':'form-control','placeholder': 'Email Address'}),
-            'password':forms.PasswordInput(attrs={'class':'form-control','placeholder': 'Password'}),
+        model = Login
+        fields = ['username', 'email', 'password']
+        widgets = {
+            'email': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email or Username'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].required = False
 
 class login_check(forms.Form):
     username = forms.CharField(
@@ -117,6 +121,11 @@ class teacherform(forms.ModelForm):
             'treferenceletter': forms.FileInput(attrs={'class': 'form-control'}),
             'texp': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].required = False
 
 class essayuploadform(forms.ModelForm):
     class Meta:
