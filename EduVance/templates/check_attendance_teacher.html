@@ -159,6 +159,17 @@
 			<h1 class="form-title">Check Attendance</h1>
 			<p class="form-subtitle">Subject-wise Attendance Filter</p>
 
+			{% if messages %}
+			<div class="mb-4">
+				{% for message in messages %}
+				<div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} text-center"
+					role="alert" style="border-radius: 12px;">
+					{{ message }}
+				</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+
 			<form method="GET" action="{% url 'attendanceviewt' %}">
 				<div class="mb-3">
 					<label class="form-label">Department</label>

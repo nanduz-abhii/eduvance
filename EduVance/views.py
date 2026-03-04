@@ -295,12 +295,48 @@ def uploadessay(request,id):
     if request.method=='POST':
         form=essayuploadform(request.POST,request.FILES)
         if form.is_valid():
-            a=form.save(commit=False)
-            a.login_id=login_details
-            a.student = stud
-            a.tea_id=te_id
-            a.save()
-            return redirect('user')
+            uploaded_file = request.FILES.get('essay')
+            if uploaded_file:
+                a=form.save(commit=False)
+                a.login_id=login_details
+                a.student = stud
+                a.tea_id=te_id
+                a.transcription = "Processing in background..."
+                a.rating = "Pending..."
+                a.save()
+                
+                # Start background thread for processing essay
+                def process_essay_in_background(essay_id):
+                    import io, requests, time
+                    try:
+                        time.sleep(2)
+                        from .models import Essay
+                        essay_obj = Essay.objects.get(id=essay_id)
+                        res = requests.get(essay_obj.essay.url)
+                        res.raise_for_status()
+                        
+                        file_bytes = io.BytesIO(res.content)
+                        file_bytes.name = essay_obj.essay.name.split('/')[-1] if essay_obj.essay.name else "essay.pdf"
+                        
+                        transcription = extract_handwriting_with_gemini(file_bytes)
+                        rating = rate_essay_with_ai(transcription)
+                        
+                        essay_obj.transcription = transcription
+                        essay_obj.rating = rating
+                        essay_obj.save(update_fields=['transcription', 'rating'])
+                    except Exception as e:
+                        print(f"Background essay processing failed: {e}")
+                        try:
+                            from .models import Essay
+                            essay_obj = Essay.objects.get(id=essay_id)
+                            essay_obj.rating = "Error processing essay files."
+                            essay_obj.save(update_fields=['rating'])
+                        except:
+                            pass
+
+                import threading
+                threading.Thread(target=process_essay_in_background, args=(a.id,)).start()
+                return redirect('viewessay')
     else:
         form=essayuploadform()
     return render(request, 'uploadessay.html',{'form':form})
@@ -523,6 +559,31 @@ def rate_assignment_with_ai(transcription, question_text):
         print(f"Rating error: {e}")
         return "Rating unavailable"
 
+def rate_essay_with_ai(transcription):
+    prompt = f"""
+    Evaluate the following student's handwritten essay for coherence, argumentation, grammar, and grammar correctness.
+    Provide an AI Score out of 10, a rating (Excellent, Good, Average, or Poor), and a short one-sentence feedback.
+    
+    Student Essay Submission: {transcription}
+    
+    Format:
+    AI Score: [X]/10
+    Rating: [Rating]
+    Feedback: [Feedback]
+    """
+    try:
+        from google import genai
+        import os
+        client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+        response = client.models.generate_content(
+            model='gemini-flash-latest',
+            contents=[prompt]
+        )
+        return response.text
+    except Exception as e:
+        print(f"Essay Rating error: {e}")
+        return "Rating unavailable"
+
 def viewassignment(request):
     stud_id=request.session.get('stud_id')
     student_obj=get_object_or_404(Studentreg,login_id=stud_id)
@@ -540,6 +601,80 @@ def poll_assignment_status(request, id):
         })
     except Assignment.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Assignment not found.'})
+
+def poll_essay_status(request, id):
+    try:
+        from .models import Essay
+        essay = Essay.objects.get(id=id)
+        return JsonResponse({
+            'status': 'success',
+            'rating': essay.rating,
+            'transcription': essay.transcription
+        })
+    except Exception:
+        return JsonResponse({'status': 'error', 'message': 'Essay not found.'})
+
+def poll_omr_status(request, id):
+    try:
+        from .models import Omr
+        omr_obj = Omr.objects.get(id=id)
+        return JsonResponse({
+            'status': 'success',
+            'rating': omr_obj.rating,
+            'transcription': omr_obj.transcription
+        })
+    except Exception:
+        return JsonResponse({'status': 'error', 'message': 'OMR not found.'})
+
+def process_omr_in_background(omr_id):
+    import traceback
+    try:
+        from .models import Omr
+        omr_obj = Omr.objects.get(id=omr_id)
+        
+        qpath = omr_obj.question_paper.path if omr_obj.question_paper else ""
+        opath = omr_obj.omr.path if omr_obj.omr else ""
+        
+        if not qpath or not opath:
+            omr_obj.rating = "Error: Question paper or OMR file missing."
+            omr_obj.transcription = "Failed"
+            omr_obj.save(update_fields=['rating', 'transcription'])
+            return
+
+        text = extract_questions_from_pdf(qpath)
+        parsed_questions = parse_mcqs(text)
+        ai_answers = infer_correct_answers_nemotron(parsed_questions)
+        student_answers = extract_student_answers(opath)
+        
+        score = 0
+        total_questions = len(ai_answers) if ai_answers else 0
+        
+        detailed_feedback = ""
+        for i, s_ans in student_answers.items():
+            correct = ai_answers.get(i)
+            if correct == s_ans:
+                score += 1
+                detailed_feedback += f"Q{i}: {s_ans} (Correct)\n"
+            else:
+                detailed_feedback += f"Q{i}: {s_ans} (Incorrect, Expected: {correct})\n"
+
+        rating = f"Score: {score}/{total_questions}\n\nFeedback:\n{detailed_feedback}"
+        
+        omr_obj.transcription = "Completed"
+        omr_obj.rating = rating
+        omr_obj.save(update_fields=['transcription', 'rating'])
+    except Exception as e:
+        print(f"OMR background processing error: {e}")
+        traceback.print_exc()
+        try:
+            from .models import Omr
+            omr_obj = Omr.objects.get(id=omr_id)
+            omr_obj.rating = "Error processing OMR files."
+            omr_obj.transcription = "Failed"
+            omr_obj.save(update_fields=['rating', 'transcription'])
+        except:
+            pass
+
 
 def removeassignment(request, id):
     a=get_object_or_404(Assignment, id=id)
@@ -576,6 +711,18 @@ def retry_ai_grade(request, id):
         
     return redirect('viewassignmentt')
 
+def retry_omr_ai(request, id):
+    import threading
+    from .models import Omr
+    from django.contrib import messages
+    omr_obj = get_object_or_404(Omr, id=id)
+    omr_obj.rating = "Pending AI Evaluation..."
+    omr_obj.transcription = "pending"
+    omr_obj.save(update_fields=['rating', 'transcription'])
+    threading.Thread(target=process_omr_in_background, args=(omr_obj.id,)).start()
+    messages.success(request, "OMR evaluation restarted.")
+    return redirect('viewomrt')
+
 def viewassignmentt(request):
     return redirect('add_assignment')
 
@@ -606,7 +753,7 @@ def viewattendance(request):
     dept = request.GET.get('department') 
     sem = request.GET.get('semester') 
     subject = request.GET.get('subject')
-    results = Studentreg.objects.filter(department=dept,semester=sem) 
+    results = Studentreg.objects.filter(department__iexact=dept,semester=sem) 
     
     if results:
         # Fetch today's attendance for this subject and department to highlight status
@@ -631,7 +778,9 @@ def viewattendance(request):
             'results': results, 
             'subject': subject
         })
-    print(results)
+    elif dept or sem:
+        messages.error(request, "No students found in the selected department and semester.")
+    
     return render(request, 'attendance.html',{'form':form})
 
 def present(request,id, subject_name):
@@ -1786,7 +1935,7 @@ def subjectstudview(request):
     all_subjects = []
     
     # Get subjects defined by HOD for this dept/sem
-    subj_meta = Subject.objects.filter(dept=st.department, sem=st.semester).first()
+    subj_meta = Subject.objects.filter(dept__iexact=st.department, sem__iexact=str(st.semester)).first()
     if subj_meta:
         for model in [Subjectadd, SubjectDetail]:
             detail_obj = model.objects.filter(subject=subj_meta).first()
@@ -2131,16 +2280,18 @@ def uploadtechs(request, id):
     tc_id = get_object_or_404(teacherreg, id=id)
     print('hiii')
     if request.method == 'POST':
-        form = omrform(request.POST, request.FILES)
+        form = omr(request.POST, request.FILES)
         print(form)
         if form.is_valid():
             a = form.save(commit=False)
             a.login_id = login_details
             a.tc_id = tc_id
             a.save()
-            return redirect('user')
+            import threading
+            threading.Thread(target=process_omr_in_background, args=(a.id,)).start()
+            return redirect('viewomr')
     else:
-        form = omrform()
+        form = omr()
 
     return render(request, 'uploadtechs.html', {'form': form})
 

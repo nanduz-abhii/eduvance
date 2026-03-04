@@ -57,8 +57,9 @@ class Essay(models.Model):
     student = models.ForeignKey('Studentreg', on_delete=models.CASCADE)
     mark = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     grade = models.CharField(max_length=2, null=True, blank=True)
+    transcription = models.TextField(null=True, blank=True)
+    rating = models.CharField(max_length=500, null=True, blank=True)
     status=models.IntegerField(default=0)
-
 
     def __str__(self):
         return f"Essay by {self.login_id} for {self.tea_id}"
@@ -76,6 +77,8 @@ class Omr(models.Model):
     current_date=models.DateTimeField(auto_now_add=True)
     login_id=models.ForeignKey('Login', on_delete=models.CASCADE)
     tc_id=models.ForeignKey('teacherreg', on_delete=models.CASCADE)
+    transcription = models.TextField(null=True, blank=True)
+    rating = models.CharField(max_length=500, null=True, blank=True)
 class AssignmentQuestion(models.Model):
     teacher = models.ForeignKey('teacherreg', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
