@@ -3,17 +3,17 @@ import uuid
 
 
 class Studentreg(models.Model):
-    photo=models.FileField(upload_to='uploads/')
-    admno=models.CharField(max_length=10)
-    name=models.CharField(max_length=50)
-    address=models.CharField(max_length=40)
-    gender=models.CharField(max_length=10)
-    dob=models.DateField(max_length=20)
-    department=models.CharField(max_length=40)
-    semester=models.IntegerField()
+    photo=models.FileField(upload_to='uploads/', null=True, blank=True)
+    admno=models.CharField(max_length=10, null=True, blank=True)
+    name=models.CharField(max_length=50, null=True, blank=True)
+    address=models.CharField(max_length=40, null=True, blank=True)
+    gender=models.CharField(max_length=10, null=True, blank=True)
+    dob=models.DateField(max_length=20, null=True, blank=True)
+    department=models.CharField(max_length=40, null=True, blank=True)
+    semester=models.IntegerField(null=True, blank=True)
     batch=models.CharField(max_length=20, null=True, blank=True)
     roll_number=models.CharField(max_length=20, null=True, blank=True)
-    contactno=models.CharField(max_length=10)
+    contactno=models.CharField(max_length=10, null=True, blank=True)
     login_id=models.OneToOneField('Login', on_delete=models.CASCADE,related_name = 'student_as_loginid')
 
 class Login(models.Model):

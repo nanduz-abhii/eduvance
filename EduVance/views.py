@@ -83,8 +83,15 @@ def studentreg(request):
             a=logins.save(commit=False)
             a.usertype=1
             a.status=1 # Approve student by default
-            # Force username to be the University Reg No (admno)
-            a.username = b.admno
+            # Auto-generate username from admno or email for students
+            if not a.username:
+                if b.admno:
+                    a.username = b.admno
+                elif a.email:
+                    a.username = a.email
+                else:
+                    import uuid
+                    a.username = f"std_{uuid.uuid4().hex[:6]}"
             a.save()
             b.login_id=a
             b.save()

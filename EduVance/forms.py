@@ -4,16 +4,6 @@ import re
 from django.core.exceptions import ValidationError
 
 class studentform(forms.ModelForm):
-    def clean_admno(self):
-        admno = self.cleaned_data.get('admno')
-        # KTU Registration Number pattern: 3 letters + 2 digits + 2 letters + 3 digits
-        # Optional 'L' prefix for lateral entry
-        # Example: MEE23AD025, LMEE21CS001
-        pattern = r'^L?[A-Z]{3}[0-9]{2}[A-Z]{2}[0-9]{3}$'
-        if not re.match(pattern, admno.upper()):
-            raise ValidationError("Invalid KTU Registration Number format (Expected: ABC00XY000)")
-        return admno.upper()
-
     gender_choices = (
         ('male', 'Male'),
         ('female', 'Female'),
@@ -58,6 +48,11 @@ class studentform(forms.ModelForm):
             'photo':forms.FileInput(attrs={'class':'form-control'}),
 
         }
+
+    def __init__(self, *args, **kwargs):
+        super(studentform, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
 class loginform(forms.ModelForm):
     username = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username (Auto-generated)'}))
