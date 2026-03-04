@@ -34,7 +34,7 @@ def extract_handwriting_with_gemini(file_path):
             print(f"Processing PDF document: {file_path}")
             try:
                 # Upload the file directly to Gemini API
-                uploaded_file = client.files.upload(path=file_path)
+                uploaded_file = client.files.upload(file=file_path)
                 print(f"File uploaded to Gemini successfully (name: {uploaded_file.name}), analyzing...")
                 
                 response = client.models.generate_content(

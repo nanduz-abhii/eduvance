@@ -534,6 +534,7 @@
                                 <th>Assignment</th>
                                 <th>AI Feedback</th>
                                 <th>Submitted</th>
+                                <th>Grade</th>
                                 <th>File</th>
                             </tr>
                         </thead>
@@ -549,6 +550,17 @@
                                     <div class="rating-cell">{{ sub.rating|default:"–" }}</div>
                                 </td>
                                 <td>{{ sub.current_date|date:"M d, Y" }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'upload_assignment_mark' sub.id %}"
+                                        style="display: flex; gap: 5px;">
+                                        {% csrf_token %}
+                                        <input type="number" step="0.01" name="mark" value="{{ sub.mark|default:'' }}"
+                                            placeholder="---"
+                                            style="width: 70px; padding: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                                        <button type="submit"
+                                            style="background:#4facfe; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer;">Save</button>
+                                    </form>
+                                </td>
                                 <td>
                                     {% if sub.assignment %}
                                     <a href="{{ sub.assignment.url }}" target="_blank" class="btn-view-file">View
@@ -604,92 +616,92 @@
     <div class="toast-notif" id="toastNotif">✅ Assignment created successfully!</div>
 
     <script>
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach((b, i) => {
-            b.classList.toggle('active', (i === 0 && tab === 'posted') || (i === 1 && tab === 'submissions'));
-        });
-        document.getElementById('tab-posted').classList.toggle('active', tab === 'posted');
-        document.getElementById('tab-submissions').classList.toggle('active', tab === 'submissions');
-    }
-
-    function openModal() {
-        document.getElementById('createModal').classList.add('active');
-        document.getElementById('title').focus();
-    }
-
-    function closeModal() {
-        document.getElementById('createModal').classList.remove('active');
-        document.getElementById('assignmentForm').reset();
-        document.getElementById('formError').style.display = 'none';
-    }
-
-    function handleOverlayClick(e) {
-        if (e.target === document.getElementById('createModal')) closeModal();
-    }
-
-    function showToast(msg) {
-        const t = document.getElementById('toastNotif');
-        t.textContent = msg;
-        t.style.display = 'block';
-        setTimeout(() => { t.style.display = 'none'; }, 4000);
-    }
-
-    document.getElementById('assignmentForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        const errDiv = document.getElementById('formError');
-        btn.disabled = true;
-        btn.textContent = 'Creating...';
-
-        const formData = new FormData(this);
-
-        try {
-            const resp = await fetch("{% url 'add_assignment' %}", {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                },
-                body: formData
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', (i === 0 && tab === 'posted') || (i === 1 && tab === 'submissions'));
             });
-            const data = await resp.json();
+            document.getElementById('tab-posted').classList.toggle('active', tab === 'posted');
+            document.getElementById('tab-submissions').classList.toggle('active', tab === 'submissions');
+        }
 
-            if (data.success) {
-                closeModal();
-                showToast('✅ Assignment created! Students can now see it.');
+        function openModal() {
+            document.getElementById('createModal').classList.add('active');
+            document.getElementById('title').focus();
+        }
 
-                // Dynamically add the new card
-                const grid = document.getElementById('assignments-grid');
-                // Remove empty state if present
-                const emptyState = grid.querySelector('.empty-state');
-                if (emptyState) emptyState.parentElement.remove();
+        function closeModal() {
+            document.getElementById('createModal').classList.remove('active');
+            document.getElementById('assignmentForm').reset();
+            document.getElementById('formError').style.display = 'none';
+        }
 
-                const card = document.createElement('div');
-                card.className = 'assignment-card';
-                card.innerHTML = `
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById('createModal')) closeModal();
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toastNotif');
+            t.textContent = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 4000);
+        }
+
+        document.getElementById('assignmentForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const errDiv = document.getElementById('formError');
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            const formData = new FormData(this);
+
+            try {
+                const resp = await fetch("{% url 'add_assignment' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                    body: formData
+                });
+                const data = await resp.json();
+
+                if (data.success) {
+                    closeModal();
+                    showToast('✅ Assignment created! Students can now see it.');
+
+                    // Dynamically add the new card
+                    const grid = document.getElementById('assignments-grid');
+                    // Remove empty state if present
+                    const emptyState = grid.querySelector('.empty-state');
+                    if (emptyState) emptyState.parentElement.remove();
+
+                    const card = document.createElement('div');
+                    card.className = 'assignment-card';
+                    card.innerHTML = `
                     <h4>${data.assignment.title}</h4>
                     <p>${data.assignment.question_text.substring(0, 150)}${data.assignment.question_text.length > 150 ? '...' : ''}</p>
                     <div class="meta">
                         <i class='bx bx-calendar'></i> ${data.assignment.created_at}
                     </div>
                 `;
-                grid.prepend(card);
+                    grid.prepend(card);
 
-                // Update count badge
-                const badges = document.querySelectorAll('.badge-count');
-                badges[0].textContent = parseInt(badges[0].textContent) + 1;
-            } else {
-                errDiv.textContent = data.error || 'Failed to create assignment.';
+                    // Update count badge
+                    const badges = document.querySelectorAll('.badge-count');
+                    badges[0].textContent = parseInt(badges[0].textContent) + 1;
+                } else {
+                    errDiv.textContent = data.error || 'Failed to create assignment.';
+                    errDiv.style.display = 'block';
+                }
+            } catch (err) {
+                errDiv.textContent = 'Network error. Please try again.';
                 errDiv.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bx bx-check-circle"></i> Create Assignment';
             }
-        } catch (err) {
-            errDiv.textContent = 'Network error. Please try again.';
-            errDiv.style.display = 'block';
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="bx bx-check-circle"></i> Create Assignment';
-        }
-    });
+        });
     </script>
 
 </body>

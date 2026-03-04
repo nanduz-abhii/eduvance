@@ -502,14 +502,17 @@ def upload_assignment_mark(request, id):
     assignments = get_object_or_404(Assignment, id=id)
 
     if request.method == 'POST':
-        form = assignment(request.POST, instance=assignments)
-        if form.is_valid():
-            form.save()
-            return redirect('viewassignmentt')  # Replace with your actual list view
-    else:
-        form = assignment(instance=assignments)
+        mark = request.POST.get('mark')
+        if mark:
+            try:
+                assignments.mark = float(mark)
+                assignments.save()
+                messages.success(request, f"Mark updated for {assignments.login_id.name}.")
+            except ValueError:
+                messages.error(request, "Invalid mark format. Please enter a number.")
+        return redirect('viewassignmentt')
 
-    return render(request, 'assignmentmark.html', {'form': form, 'student': assignments.login_id})
+    return redirect('viewassignmentt')
 
 
 def removeassignmentt(request,id):
@@ -1532,7 +1535,7 @@ def extract_handwriting_with_gemini(media_file):
                 temp_pdf_path = temp_pdf.name
                 
             try:
-                uploaded_file = client.files.upload(path=temp_pdf_path)
+                uploaded_file = client.files.upload(file=temp_pdf_path)
                 response = client.models.generate_content(
                     model='gemini-flash-latest',
                     contents=[prompt, uploaded_file]

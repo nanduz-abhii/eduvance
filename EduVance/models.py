@@ -85,8 +85,10 @@ class AssignmentQuestion(models.Model):
     def __str__(self):
         return self.title
 
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
+
 class Assignment(models.Model):
-    assignment=models.FileField(upload_to='uploads/')
+    assignment=models.FileField(upload_to='uploads/', storage=RawMediaCloudinaryStorage())
     question = models.ForeignKey(AssignmentQuestion, on_delete=models.CASCADE, null=True)
     transcription = models.TextField(null=True, blank=True)
     rating = models.CharField(max_length=100, null=True, blank=True)
