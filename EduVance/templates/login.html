@@ -386,13 +386,14 @@
         <div class="login-box">
             <h3>Login</h3>
             {% if messages %}
-            <ul class="messages" style="list-style: none; padding: 0; text-align: center; margin-bottom: 20px;">
+            <div style="margin-bottom: 20px;">
                 {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}
-                    style="color: #ff4d4d; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 5px;">{{ message
-                    }}</li>
-                    {% endfor %}
-            </ul>
+                <div
+                    style="color: #ffffff; background: rgba(255, 77, 77, 0.4); border: 1px solid #ff4d4d; padding: 12px; border-radius: 8px; font-size: 0.9em; text-align: center; backdrop-filter: blur(5px);">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
             {% endif %}
             <form method="POST">
                 {% csrf_token %}
@@ -404,13 +405,9 @@
                     <h4>Password</h4>
                     <input type="password" name="password" id="id_password" placeholder="Enter your password" required>
                 </div>
-                <!-- <div class="forgot-pass">
-                    <a href="#">Forgot your password?</a>
-                </div> -->
                 <div class="form_group">
-                    <button type="submit" class="btn" value="login">Login</button>
+                    <button type="submit" class="btn">Login</button>
                 </div>
-            </form>
             </form>
         </div>
     </div>

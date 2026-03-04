@@ -18,6 +18,8 @@ import tempfile
 import fitz 
 from PIL import Image
 from google import genai
+import threading
+import time
 
 NVIDIA_API_KEY = "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"
 # Configure Gemini API Key (Ideally this should be in .env, but hardcoding for now as per instructions/assumptions)
@@ -25,6 +27,31 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyANUm5NhkC12yWPW3fR5Kf5N
 client = genai.Client(api_key=GEMINI_API_KEY)
 NVIDIA_API_KEY = "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"
 CHOICES = ['A', 'B', 'C', 'D']
+
+# ---- Self-Ping to avoid Render inactivity ----
+RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "")
+
+def _self_ping_worker():
+    """Pings the app every 10 minutes to prevent Render from sleeping."""
+    time.sleep(30)  # Give server time to start
+    while True:
+        try:
+            if RENDER_URL:
+                requests.get(f"{RENDER_URL}/ping", timeout=10)
+                print("[Self-Ping] Pinged successfully")
+        except Exception as e:
+            print(f"[Self-Ping] Error: {e}")
+        time.sleep(600)  # Every 10 minutes
+
+# Start ping thread only once (not during management commands)
+if os.environ.get("RUN_MAIN") != "true" or os.environ.get("RENDER_EXTERNAL_URL"):
+    _ping_thread = threading.Thread(target=_self_ping_worker, daemon=True)
+    _ping_thread.start()
+
+def ping(request):
+    """Simple health-check endpoint."""
+    return HttpResponse("pong", content_type="text/plain", status=200)
+
 def main(request):
     teachers = teacherreg.objects.filter(login_id__status='1')
     return render(request, 'main.html', {'teachers': teachers})
@@ -73,7 +100,7 @@ def studentreg(request):
 
 def adminstudview(request):
     view_id=Login.objects.filter(usertype=1).select_related('student_as_loginid')
-    return render(request,'adminstudview.html',{'data':view_id})
+    return render(request,'adminstudview.html',{'results':view_id})
 def rejects(request,id):
     a=get_object_or_404(Login,id=id)
     a.status=2
@@ -133,50 +160,49 @@ def login(request):
         form = login_check(request.POST)
         if form.is_valid():
             print("DEBUG: Form is valid")
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password'].strip()  # Clean whitespace
-            print(f"DEBUG: Attempting login for username: {username}")
+            username_input = form.cleaned_data['username']
+            password = form.cleaned_data['password'].strip()
+            print(f"DEBUG: Attempting login for identifier: {username_input}")
             try:
-                user = Login.objects.get(username=username)
+                # Check both username and email fields
+                user = Login.objects.filter(
+                    Q(username=username_input) | Q(email=username_input)
+                ).first()
+                
+                if not user:
+                    print("DEBUG: User does not exist")
+                    messages.error(request, 'User does not exist')
+                    return redirect('login')
+
                 print(f"DEBUG: User found: {user.username}, usertype: {user.usertype}, status: {user.status}")
-                if user.password.strip() == password:  # Compare stripped values
+                
+                if user.password.strip() == password:
                     print("DEBUG: Password matched")
-                    # Only check status for students and teachers
+                    # Check status for students and teachers
                     if user.usertype in [1, 2]:
                         if user.status == 2:
-                            print("DEBUG: Account rejected")
                             messages.error(request, 'Your account has been rejected.')
                             return redirect('login')
                         elif user.status == 0:
-                            print("DEBUG: Account under review")
-                            messages.error(request, 'Your account is under review. Please wait for admin approval.')
+                            messages.error(request, 'Your account is under review.')
                             return redirect('login')
 
-                    # User is allowed to log in
+                    # Success - Set session and redirect
                     if user.usertype == 1:
-                        print("DEBUG: Redirecting to user")
                         request.session['stud_id'] = user.id
                         return redirect('user')
                     elif user.usertype == 2:
-                        print("DEBUG: Redirecting to tuser")
                         request.session['t_id'] = user.id
                         return redirect('tuser')
                     elif user.usertype == 3:
-                        print("DEBUG: Redirecting to admin")
                         request.session['a_id'] = user.id
                         return redirect('admin')
-                    else:
-                        print(f"DEBUG: Unknown usertype: {user.usertype}")
                 else:
-                    print(f"DEBUG: Password mismatch. Input: {password}, Stored: {user.password}")
                     messages.error(request, 'Invalid password')
-            except Login.DoesNotExist:
-                print("DEBUG: User does not exist")
-                messages.error(request, 'User does not exist')
-        else:
-            print(f"DEBUG: Form errors: {form.errors}")
+            except Exception as e:
+                print(f"DEBUG: Login error: {e}")
+                messages.error(request, 'An error occurred during login.')
     else:
-        print("DEBUG: GET request")
         form = login_check()
     return render(request, 'login.html', {'login': form})
 
@@ -390,20 +416,49 @@ def add_assignment_view(request):
     tea_id = request.session.get('t_id')
     teacher = get_object_or_404(teacherreg, login_id=tea_id)
     if request.method == 'POST':
-        form = AssignmentQuestionForm(request.POST)
-        if form.is_valid():
-            a = form.save(commit=False)
-            a.teacher = teacher
-            a.save()
-            messages.success(request, "Assignment added successfully.")
-            return redirect('tuser')
-    else:
-        form = AssignmentQuestionForm()
-    return render(request, 'add_assignment.html', {'form': form})
+        title = request.POST.get('title', '').strip()
+        question_text = request.POST.get('question_text', '').strip()
+        if title and question_text:
+            aq = AssignmentQuestion.objects.create(
+                teacher=teacher,
+                title=title,
+                question_text=question_text
+            )
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'assignment': {
+                        'id': aq.id,
+                        'title': aq.title,
+                        'question_text': aq.question_text,
+                        'created_at': aq.created_at.strftime('%b %d, %Y'),
+                    }
+                })
+            messages.success(request, "Assignment created successfully.")
+            return redirect('viewassignmentt')
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': 'Title and question are required.'})
+            messages.error(request, "Title and question are required.")
+    
+    # GET: render combined view+add page
+    assignments = AssignmentQuestion.objects.filter(teacher=teacher).order_by('-created_at')
+    all_submissions = Assignment.objects.filter(ta_id=teacher).select_related('login_id', 'question')
+    return render(request, 'viewassignmentt.html', {
+        'assignments': assignments,
+        'submissions': all_submissions,
+    })
 
 def student_assignments_view(request):
-    assignments = AssignmentQuestion.objects.all()
-    return render(request, 'student_assignments.html', {'assignments': assignments})
+    stud_id = request.session.get('stud_id')
+    student_obj = get_object_or_404(Studentreg, login_id=stud_id) if stud_id else None
+    assignments = AssignmentQuestion.objects.all().order_by('-created_at')
+    
+    submitted_ids = []
+    if student_obj:
+        submitted_ids = list(Assignment.objects.filter(login_id=student_obj).values_list('question_id', flat=True))
+    
+    return render(request, 'student_assignments.html', {'assignments': assignments, 'submitted_ids': submitted_ids})
 
 def rate_assignment_with_ai(transcription, question_text):
     prompt = f"""
@@ -439,19 +494,7 @@ def removeassignment(request):
     return render(request,'viewassignment.html',{'data':view_id})
 
 def viewassignmentt(request):
-    tea_id = request.session.get('t_id')
-    teacher_obj = get_object_or_404(teacherreg, login_id=tea_id)
-    submissions = Assignment.objects.filter(ta_id=teacher_obj).select_related('login_id', 'question') 
-    
-    query = request.GET.get('q', '') 
-    if query:
-        submissions = submissions.filter(
-           Q(login_id__admno__icontains=query) |
-           Q(login_id__name__icontains=query) |
-           Q(login_id__department__icontains=query) |
-           Q(question__title__icontains=query)
-        )
-    return render(request, 'viewassignmentt.html', {'submissions': submissions, 'query':query})
+    return redirect('add_assignment')
 
 def upload_assignment_mark(request, id):
     assignments = get_object_or_404(Assignment, id=id)

@@ -6,63 +6,248 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Available Assignments - EduVance</title>
+    <title>Assignments - EduVance</title>
     <link rel="stylesheet" href="{% static 'mainpage/assets/bootstrap/css/bootstrap.min.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'mainpage/assets/css/style.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Urbanist', sans-serif;
+            background: #f5f7fa;
+        }
+
+        .top-nav {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-nav .logo {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .top-nav .logo span {
+            color: #4facfe;
+        }
+
+        .top-nav .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 0.9rem;
+        }
+
+        .top-nav .nav-links a:hover {
+            color: #fff;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 48px 40px;
+        }
+
+        .hero h1 {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 6px;
+        }
+
+        .main-content {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .badge-count {
+            background: #4facfe;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .assignments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .assignment-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #4facfe;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .assignment-card.submitted {
+            border-left-color: #48bb78;
+            opacity: 0.85;
+        }
+
+        .assignment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .assignment-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .assignment-card p {
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .assignment-card .meta {
+            color: #a0aec0;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        .btn-upload {
+            display: inline-block;
+            margin-top: 16px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+            color: #fff;
+        }
+
+        .badge-submitted {
+            display: inline-block;
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px;
+            color: #a0aec0;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
-    <header id="navigation">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-30 left-col align-self-center">
-                    <div class="site-logo">
-                        <a href="{% url 'user' %}">EduVance</a>
+
+    <nav class="top-nav">
+        <a href="{% url 'user' %}" class="logo">Edu<span>Vance</span></a>
+        <div class="nav-links">
+            <a href="{% url 'user' %}"><i class='bx bx-home'></i> Dashboard</a>
+            <a href="{% url 'viewassignment' %}">My Submissions</a>
+            <a href="{% url 'login' %}">Log Out</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Available Assignments</h1>
+        <p>Submit your answers for the assignments below. Green ones are already submitted.</p>
+    </div>
+
+    <div class="main-content">
+        <div class="section-header">
+            <h2>All Assignments</h2>
+            <span class="badge-count">{{ assignments|length }}</span>
+        </div>
+
+        <div class="assignments-grid">
+            {% for aq in assignments %}
+            <div class="assignment-card {% if aq.id in submitted_ids %}submitted{% endif %}">
+                <div>
+                    <h4>{{ aq.title }}</h4>
+                    <p>{{ aq.question_text|truncatechars:180 }}</p>
+                    <div class="meta">
+                        <i class='bx bx-calendar'></i> Posted: {{ aq.created_at|date:"M d, Y" }}
+                        &nbsp;|&nbsp; Teacher: {{ aq.teacher.tname|default:"Faculty" }}
                     </div>
                 </div>
+                {% if aq.id in submitted_ids %}
+                <span class="badge-submitted"><i class='bx bx-check-circle'></i> Submitted</span>
+                {% else %}
+                <a href="{% url 'uploadassignment' aq.id %}" class="btn-upload">
+                    <i class='bx bx-upload'></i> Upload Answer
+                </a>
+                {% endif %}
             </div>
-        </div>
-    </header>
-
-    <section class="main-banner" style="background-color: #0d6efd; padding: 100px 0;">
-        <div class="container">
-            <div class="row text-center text-white">
-                <h2>Your Assignments</h2>
-            </div>
-        </div>
-    </section>
-
-    <section class="assignments-list section-padding" style="padding: 60px 0;">
-        <div class="container">
-            <div class="row">
-                {% for assignment in assignments %}
-                <div class="col-lg-4 mb-4">
-                    <div class="assignment-card"
-                        style="background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; display: flex; flex-direction: column;">
-                        <h4 style="color: #0d6efd; font-weight: 700; margin-bottom: 15px;">{{ assignment.title }}</h4>
-                        <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1;">{{
-                            assignment.question|truncatechars:150 }}</p>
-                        <div class="text-muted small mb-3">Posted by: {{ assignment.teacher.username }}</div>
-                        <a href="{% url 'uploadassignment' assignment.id %}"
-                            class="btn btn-outline-primary w-100">Upload Answer</a>
-                    </div>
+            {% empty %}
+            <div style="grid-column: 1/-1;">
+                <div class="empty-state">
+                    <i class='bx bx-bookmark'></i>
+                    <p>No assignments available yet. Check back later!</p>
                 </div>
-                {% empty %}
-                <div class="col-12 text-center">
-                    <p>No assignments available at the moment.</p>
-                </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
-    </section>
+    </div>
 
-    <footer class="footer-section"
-        style="padding: 40px 0; background: #f8f9fa; border-top: 1px solid #eee; text-align: center;">
-        <p>&copy; 2025 EduVance Team</p>
-    </footer>
 </body>
 
 </html>
