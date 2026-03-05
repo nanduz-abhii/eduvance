@@ -13,7 +13,6 @@ from PyPDF2 import PdfReader
 from django.core.files.storage import default_storage
 import os
 import tempfile
-from PIL import Image
 import threading
 import time
 # Configure Gemini API Key
@@ -51,6 +50,9 @@ def main(request):
 
 def info(request):
     return render(request, 'info.html')
+
+def test(request):
+    return HttpResponse("Test page active")
 
 def admin(request):
     user_count = Studentreg.objects.all().count()
@@ -1734,7 +1736,7 @@ def get_grade(plagiarism_percentage):
 
 
 def extract_text_from_pdf(pdf_file):
-    """Extracts text from a PDF file."""
+    import fitz  # PyMuPDF for extracting text
     doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
     text = "\n".join(page.get_text("text") for page in doc)
     return text
@@ -1753,6 +1755,7 @@ def extract_handwriting_with_gemini(media_file):
         
         if file_extension in ['.jpg', '.jpeg', '.png']:
             # Handle standard images
+            from PIL import Image
             image = Image.open(media_file)
             response = client.models.generate_content(
                 model='gemini-flash-latest',
