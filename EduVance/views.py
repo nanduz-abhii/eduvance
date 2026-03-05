@@ -29,14 +29,17 @@ def _self_ping_worker():
     while True:
         try:
             if RENDER_URL:
-                requests.get(f"{RENDER_URL}/ping", timeout=10)
-                print("[Self-Ping] Pinged successfully")
+                # Ensure no double slashes if RENDER_URL ends with /
+                target_url = f"{RENDER_URL.rstrip('/')}/ping"
+                requests.get(target_url, timeout=10)
+                # Avoid excessive logging in production, so we only print on error or startup
         except Exception as e:
-            print(f"[Self-Ping] Error: {e}")
+            # We print errors so we can see them in Render logs
+            print(f"[Self-Ping Error] {e}")
         time.sleep(600)  # Every 10 minutes
 
-# Start ping thread only once (not during management commands)
-if os.environ.get("RUN_MAIN") != "true" or os.environ.get("RENDER_EXTERNAL_URL"):
+# Ensure thread starts on deployment (RENDER_EXTERNAL_URL is set by Render)
+if os.environ.get("RENDER_EXTERNAL_URL"):
     _ping_thread = threading.Thread(target=_self_ping_worker, daemon=True)
     _ping_thread.start()
 

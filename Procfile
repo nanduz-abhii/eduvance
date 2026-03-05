@@ -1,1 +1,1 @@
-web: gunicorn majorp.wsgi
+web: gunicorn majorp.wsgi --timeout 120
