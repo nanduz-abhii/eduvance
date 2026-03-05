@@ -7,17 +7,13 @@ from datetime import date
 from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseNotFound
 import re
-import cv2
-import numpy as np
 import requests
 import json
 from PyPDF2 import PdfReader
 from django.core.files.storage import default_storage
 import os
 import tempfile
-import fitz 
 from PIL import Image
-from google import genai
 import threading
 import time
 # Configure Gemini API Key
@@ -81,7 +77,7 @@ def studentreg(request):
     if request.method == 'POST':
         form=studentform(request.POST,request.FILES)
         logins=loginform(request.POST)
-        print(form)
+        logins=loginform(request.POST)
         if form.is_valid() and logins.is_valid():
             b=form.save(commit=False)
             a=logins.save(commit=False)
@@ -536,6 +532,8 @@ def student_assignments_view(request):
     return render(request, 'student_assignments.html', {'assignments': assignments, 'submitted_ids': submitted_ids})
 
 def rate_assignment_with_ai(transcription, question_text):
+    import os
+    from google import genai
     prompt = f"""
     Evaluate the following student's handwritten transcription against the assignment question for relevance and correctness.
     Provide an AI Score out of 10, a rating (Excellent, Good, Average, or Poor), and a short one-sentence feedback.
@@ -560,6 +558,8 @@ def rate_assignment_with_ai(transcription, question_text):
         return "Rating unavailable"
 
 def rate_essay_with_ai(transcription):
+    from google import genai
+    import os
     prompt = f"""
     Evaluate the following student's handwritten essay for coherence, argumentation, grammar, and grammar correctness.
     Provide an AI Score out of 10, a rating (Excellent, Good, Average, or Poor), and a short one-sentence feedback.
@@ -1741,6 +1741,7 @@ def extract_text_from_pdf(pdf_file):
 
 def extract_handwriting_with_gemini(media_file):
     """Extracts handwritten text from an image or PDF using Google Gemini Vision."""
+    from google import genai
     try:
         client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
         # Read the file content
@@ -2248,6 +2249,8 @@ def infer_correct_answers_nemotron(questions):
     return predicted
 
 def extract_student_answers(img_path):
+    import cv2
+    import numpy as np
     image = cv2.imread(img_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -2278,10 +2281,8 @@ def uploadtechs(request, id):
     stud_id = request.session.get('stud_id')   
     login_details = get_object_or_404(Login, id=stud_id)
     tc_id = get_object_or_404(teacherreg, id=id)
-    print('hiii')
     if request.method == 'POST':
         form = omr(request.POST, request.FILES)
-        print(form)
         if form.is_valid():
             a = form.save(commit=False)
             a.login_id = login_details
@@ -2335,6 +2336,7 @@ def uploadomr(request, id):
 
 
 def extract_questions_and_marks_from_pdf(pdf_path):
+    import fitz
     doc = fitz.open(pdf_path)
     text = ""
     for page in doc:
