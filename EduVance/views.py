@@ -316,10 +316,8 @@ def uploadessay(request,id):
                         time.sleep(2)
                         from .models import Essay
                         essay_obj = Essay.objects.get(id=essay_id)
-                        res = requests.get(essay_obj.essay.url)
-                        res.raise_for_status()
                         
-                        file_bytes = io.BytesIO(res.content)
+                        file_bytes = io.BytesIO(essay_obj.essay.read())
                         file_bytes.name = essay_obj.essay.name.split('/')[-1] if essay_obj.essay.name else "essay.pdf"
                         
                         transcription = extract_handwriting_with_gemini(file_bytes)
@@ -451,16 +449,14 @@ def uploadassignment(request,id):
             
             # Start background thread for processing
             def process_in_background(assignment_id):
-                import io, requests
+                import io, requests, time
                 try:
                     # Let the database commit and Cloudinary finish its initial sync
                     time.sleep(2)
                     from .models import Assignment
                     assign_obj = Assignment.objects.get(id=assignment_id)
-                    res = requests.get(assign_obj.assignment.url)
-                    res.raise_for_status()
                     
-                    file_bytes = io.BytesIO(res.content)
+                    file_bytes = io.BytesIO(assign_obj.assignment.read())
                     file_bytes.name = assign_obj.assignment.name.split('/')[-1] if assign_obj.assignment.name else "submission.pdf"
                     
                     transcription = extract_handwriting_with_gemini(file_bytes)

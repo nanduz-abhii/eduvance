@@ -3874,13 +3874,16 @@
 							{% csrf_token %}
 							<table align="center">
 								<tr>
+									<th>Upload Question Paper (PDF):</th>
+									<td> {{form.question_paper}}</td>
+								</tr>
+								<tr>
 									<th>Upload your OMR Sheet:</th>
 									<td> {{form.omr}}</td>
 								</tr>
-
 							</table>
 							<div class="form-group col-lg-12">
-								<button class="bg_btn bt" type="upload" name="upload">Upload</button>
+								<button class="bg_btn bt" type="submit" name="submit">Upload</button>
 							</div>
 						</form>
 					</div>
