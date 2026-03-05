@@ -52,6 +52,10 @@ def ping(request):
 def main(request):
     teachers = teacherreg.objects.filter(login_id__status='1')
     return render(request, 'main.html', {'teachers': teachers})
+
+def info(request):
+    return render(request, 'info.html')
+
 def admin(request):
     user_count = Studentreg.objects.all().count()
     t_count = teacherreg.objects.all().count()
